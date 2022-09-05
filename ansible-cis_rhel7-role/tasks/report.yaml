@@ -1,0 +1,19 @@
+---
+
+# save report to local file, troubleshooting
+- name: save result table to file
+  ansible.builtin.copy:
+    dest: ~/cis_rhel_results.json
+    content: "{{ rules_cis }}"
+  delegate_to: localhost
+  become: no
+  when: save_report is defined
+
+- name: set_fact results
+  ansible.builtin.set_fact:
+    results: "{{ results|default({})| combine( {item: rules_cis[item]} ) }}"
+  loop: "{{ rules_cis | flatten(levels=1) }}"
+  when: rules_cis[item]['failed'] is defined
+
+- name: all failed items
+  ansible.builtin.debug: var=results

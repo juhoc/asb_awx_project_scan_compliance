@@ -1,0 +1,708 @@
+---
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.ip_forward, value: 0 }
+    - { name: net.ipv6.conf.all.forwarding, value: 0 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_1_1.enabled
+    - ansible_local.physics.product is defined
+    - ansible_local.physics.product != 'nova-compute'
+
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.send_redirects, value: 0 }
+    - { name: net.ipv4.conf.default.send_redirects, value: 0 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_1.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.accept_source_route, value: 0 }
+    - { name: net.ipv4.conf.default.accept_source_route, value: 0 }
+    - { name: net.ipv6.conf.all.accept_source_route, value: 0 }
+    - { name: net.ipv6.conf.default.accept_source_route, value: 0 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+    - sysctl_flush_ipv6_route_table
+  when:
+    - rules.rule_3_2_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.accept_redirects, value: 0 }
+    - { name: net.ipv4.conf.default.accept_redirects, value: 0 }
+    - { name: net.ipv6.conf.all.accept_redirects, value: 0 }
+    - { name: net.ipv6.conf.default.accept_redirects, value: 0 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+    - sysctl_flush_ipv6_route_table
+  when:
+    - rules.rule_3_2_2.enabled
+    - ansible_local.physics.product is defined
+    - ansible_local.physics.product != 'nova-compute'
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.secure_redirects, value: 0 }
+    - { name: net.ipv4.conf.default.secure_redirects, value: 0 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_4.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.log_martians, value: 1 }
+    - { name: net.ipv4.conf.default.log_martians, value: 1 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_5.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: net.ipv4.icmp_echo_ignore_broadcasts
+    value: 1
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_6.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: net.ipv4.icmp_ignore_bogus_error_responses
+    value: 1
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_7.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.rp_filter, value: 1 }
+    - { name: net.ipv4.conf.default.rp_filter, value: 1 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_7.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_7
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_8.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: 1
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_8.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_8
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_2_9.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv6.conf.all.accept_ra, value: 0 }
+    - { name: net.ipv6.conf.default.accept_ra, value: 0 }
+  notify:
+    - sysctl_flush_ipv4_route_table
+  when:
+    - rules.rule_3_2_9.enabled
+    - ansible_local.physics.product is defined
+    - ansible_local.physics.product != 'nova-compute'
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_9
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_3_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*dccp\\s*/bin/true' /etc/modprobe.d/dccp.conf || echo 'install dccp /bin/true' > /etc/modprobe.d/dccp.conf"
+    - "lsmod | grep dccp>/dev/null && { rmmod dccp; } || { /bin/true; }"
+  when:
+    - rules.rule_3_3_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_3_2.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*sctp\\s*/bin/true' /etc/modprobe.d/sctp.conf || echo 'install sctp /bin/true' > /etc/modprobe.d/sctp.conf"
+    - "lsmod | grep sctp>/dev/null && { rmmod sctp; } || { /bin/true; }"
+  when:
+    - rules.rule_3_3_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_3_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*rds\\s*/bin/true' /etc/modprobe.d/rds.conf || echo 'install rds /bin/true' > /etc/modprobe.d/rds.conf"
+    - "lsmod | grep rds>/dev/null && { rmmod rds; } || { /bin/true; }"
+  when:
+    - rules.rule_3_3_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_3_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*tipc\\s*/bin/true' /etc/modprobe.d/tipc.conf || echo 'install tipc /bin/true' > /etc/modprobe.d/tipc.conf"
+    - "lsmod | grep tipc>/dev/null && { rmmod tipc; } || { /bin/true; }"
+  when:
+    - rules.rule_3_3_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name:
+      - iptables
+      - firewalld
+    state: present
+  when:
+    - rules.rule_3_4_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_2_1.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+  when:
+    - rules.rule_3_4_2_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: iptables
+    state: stopped
+    enabled: no
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_3_4_2_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: nftables
+    state: stopped
+    enabled: no
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_3_4_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_2_4.description }}'
+  register: _output_rule
+  ansible.posix.firewalld:
+    state: enabled
+    zone: public
+  when:
+    - rules.rule_3_4_2_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_2_5.description }}'
+  register: _output_rule
+  ansible.posix.firewalld:
+    state: enabled
+    zone: public
+    interface: eth0
+  when:
+    - rules.rule_3_4_2_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_2_6.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_2_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_2.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_5.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_6.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_7.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_7.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_7
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_3_8.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_3_8.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3_8
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "iptables -P INPUT DROP"
+    - "iptables -P OUTPUT DROP"
+    - "iptables -P FORWARD DROP"
+  when:
+    - rules.rule_3_4_4_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "iptables -A INPUT -i lo -j ACCEPT"
+    - "iptables -A OUTPUT -o lo -j ACCEPT"
+    - "iptables -A INPUT -s 127.0.0.0/8 -j DROP"
+  when:
+    - rules.rule_3_4_4_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT"
+    - "iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT"
+    - "iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT"
+    - "iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT"
+    - "iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT"
+    - "iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT"
+  when:
+    - rules.rule_3_4_4_1_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_4_1_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_2_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "ip6tables -P INPUT DROP"
+    - "ip6tables -P OUTPUT DROP"
+    - "ip6tables -P FORWARD DROP"
+  when:
+    - rules.rule_3_4_4_2_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "ip6tables -A INPUT -i lo -j ACCEPT"
+    - "ip6tables -A OUTPUT -o lo -j ACCEPT"
+    - "ip6tables -A INPUT -s ::1 -j DROP"
+  when:
+    - rules.rule_3_4_4_2_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "ip6tables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT"
+    - "ip6tables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT"
+    - "ip6tables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT"
+    - "ip6tables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT"
+    - "ip6tables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT"
+    - "ip6tables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT"
+  when:
+    - rules.rule_3_4_4_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_4_4_2_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_3_4_4_2_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_5.description }}'
+  register: _output_rule
+  ansible.builtin.shell: nmcli radio all off
+  when:
+    - rules.rule_3_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_3_6.description }}'
+  register: _output_rule
+  ansible.builtin.replace:
+    dest: /etc/default/grub
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+    - regexp: '(?:ipv6.disable=\d?\s*)'
+      replace: ''
+    - regexp: '(^GRUB_CMDLINE_LINUX\s*\=\s*)(?:")(.+)(?<!ipv6.disable=1)(?:")'
+      replace: '\1"\2 ipv6.disable=1"'
+  notify: grub_mkconfig
+  when:
+    - rules.rule_3_6.enabled
+    - ansible_local.physics.product is defined
+    - ansible_local.physics.product != 'nova-compute'
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6
+    _current_rule_output: '{{ _output_rule }}'
+

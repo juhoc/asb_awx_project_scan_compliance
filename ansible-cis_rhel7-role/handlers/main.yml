@@ -1,0 +1,65 @@
+---
+# handlers file for ansible-CISHardening-role
+
+
+- name: restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+
+# handlers file for RHEL7-CIS
+
+- name: sysctl flush ipv4 route table
+  become: yes
+  ansible.builtin.sysctl:
+    name: net.ipv4.route.flush
+    value: 1
+    sysctl_set: yes
+  when: ansible_virtualization_type != "docker"
+
+- name: sysctl flush ipv6 route table
+  become: yes
+  ansible.builtin.sysctl:
+    name: net.ipv6.route.flush
+    value: 1
+    sysctl_set: yes
+  when: ansible_virtualization_type != "docker"
+
+- name: systemd restart tmp.mount
+  become: yes
+  ansible.builtin.systemd:
+    name: tmp.mount
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+    state: reloaded
+
+- name: generate new grub config
+  become: yes
+  ansible.builtin.command: grub2-mkconfig -o "{{ grub_cfg.stat.lnk_source }}"
+  when:
+    - grub_cfg.stat is defined
+    - grub_cfg.stat.lnk_source is defined
+    - grub_cfg.stat.lnk_source
+
+- name: restart firewalld
+  become: yes
+  ansible.builtin.service:
+    name: firewalld
+    state: restarted
+
+- name: restart xinetd
+  become: yes
+  ansible.builtin.service:
+    name: xinetd
+    state: restarted
+
+- name: restart sshd
+  become: yes
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+
+- name: reload dconf
+  become: yes
+  ansible.builtin.command: dconf update

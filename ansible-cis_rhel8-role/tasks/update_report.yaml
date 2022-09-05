@@ -1,0 +1,81 @@
+---
+# - debug: var=_current_rule_output
+
+- name: save results to dictionary (single item)
+  ansible.builtin.set_fact:
+    rules: "{{ rules | combine(_updated_item, recursive=true) }}"
+  when: _current_rule_output.results is not defined
+  vars:
+    _updated_item: |
+      {
+      "{{ _current_rule }}": {
+        {% if rules[_current_rule].failed is not defined %}
+          {% if _current_rule_output.skipped is defined %}
+            {% if _current_rule_output.skip_reason is defined %}
+              "status": "{{ _current_rule_output.skip_reason }}"
+            {% endif %}
+            {% if _current_rule_output.skipped_reason is defined %}
+              "status": "{{ _current_rule_output.skipped_reason }}"
+            {% endif %}
+          {% else %}
+            {% if _current_rule_output.failed is defined and not _current_rule_output.failed %}
+            "status": "OK"
+            {% else %}
+              {% if _current_rule_output.stderr is defined and _current_rule_output.stderr| length > 0 %}
+                "status": "{{ _current_rule_output.stderr|regex_replace('\n') }}",
+                "failed": true
+              {% else %}
+                {% if _current_rule_output.msg is defined %}
+                  "status": "{{ _current_rule_output.msg }}",
+                {% endif %}
+                {% if _current_rule_output.stdout is defined and _current_rule_output.msg is not defined %}
+                  "status": "{{ _current_rule_output.stdout_lines }}",
+                {% endif %}
+                "failed": true
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        }
+      }
+
+- name: save results to dictionary (multi items)
+  ansible.builtin.set_fact:
+    rules: "{{ rules | combine(_updated_item, recursive=true) }}"
+  when:
+    - _current_rule_output.results is defined
+    - _current_rule_output.results[0].item is defined
+  loop: "{{ _current_rule_output.results | flatten(levels=1) }}"
+  vars:
+    _updated_item: |
+      {
+      "{{ _current_rule }}": {
+        {% if rules[_current_rule].failed is not defined %}
+          {% if item.skipped is defined %}
+            {% if item.skip_reason is defined %}
+              "status": "{{ item.skip_reason }}"
+            {% endif %}
+            {% if item.skipped_reason is defined %}
+              "status": "{{ item.skipped_reason }}"
+            {% endif %}
+          {% else %}
+            {% if item.failed is defined and not item.failed %}
+            "status": "OK"
+            {% else %}
+              {% if item.stderr is defined and item.stderr| length > 0 %}
+                "status": "{{ item.stderr|regex_replace('\n') }}",
+                "failed": true
+              {% else %}
+                {% if item.msg is defined %}
+                "status": "{{ item.msg }}",
+                {% endif %}
+                {% if item.stdout is defined and item.msg is not defined %}
+                "status": "{{ item.stdout_lines }}",
+                {% endif %}
+                "failed": true
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        }
+      }

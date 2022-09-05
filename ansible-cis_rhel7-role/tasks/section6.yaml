@@ -1,0 +1,792 @@
+---
+
+- name: '{{ rules_cis.rule_6_1_1.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  tags:
+    - level2
+    - patch
+    - rule_6.1.1
+    - notimplemented
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_2.description }}'
+  ansible.builtin.file:
+    dest: /etc/passwd
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.2
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_3.description }}'
+  ansible.builtin.file:
+    dest: /etc/shadow
+    owner: root
+    group: root
+    mode: 0000
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.3
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_4.description }}'
+  ansible.builtin.file:
+    dest: /etc/group
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_4.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_5.description }}'
+  ansible.builtin.file:
+    dest: /etc/gshadow
+    owner: root
+    group: root
+    mode: 0000
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_5.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_6.description }}'
+  ansible.builtin.file:
+    dest: /etc/passwd-
+    owner: root
+    group: root
+    mode: 0600
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_6.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_7.description }}'
+  ansible.builtin.file:
+    dest: /etc/shadow-
+    owner: root
+    group: root
+    mode: 0000
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_7.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.7
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_8.description }}'
+  ansible.builtin.file:
+    dest: /etc/group-
+    owner: root
+    group: root
+    mode: 0600
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_8.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.8
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_8
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_9.description }}'
+  ansible.builtin.file:
+    dest: /etc/gshadow-
+    owner: root
+    group: root
+    mode: 0000
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_9.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.9
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_9
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_10.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_10.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.10
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_10
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_11.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_11.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.11
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_11
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_12.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_12.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.12
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_12
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_13.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_13.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.13
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_13
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_1_14.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_1_14.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.1.14
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_1_14
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_1.description }}'
+  ansible.builtin.command: passwd -l {{ item }}
+  changed_when: no
+  failed_when: no
+  loop: "{{ empty_password_accounts.stdout_lines }}"
+  when:
+    - rules_cis.rule_6_2_1.enabled
+    - empty_password_accounts.rc
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+# todo modificando
+- name: '{{ rules_cis.rule_6_2_2.description }}'
+  # command: sed -i '/^+/ d' /etc/passwd
+  ansible.builtin.replace:
+    path: /etc/passwd
+    regexp: '^\+:'
+    replace: ''
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_2.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+# todo modificando
+- name: '{{ rules_cis.rule_6_2_3.description }}'
+  # command: sed -i '/^+/ d' /etc/shadow
+  ansible.builtin.replace:
+    path: /etc/shadow
+    regexp: '^\+:'
+    replace: ''
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_3.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+# todo modificando
+- name: '{{ rules_cis.rule_6_2_4.description }}'
+  #command: sed -i '/^+/ d' /etc/group
+  ansible.builtin.replace: #  command: sed -i '/^+/ d' /etc/group
+    path: /etc/shadow
+    regexp: '^\+:'
+    replace: ''
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_4.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_5.description }}'
+  ansible.builtin.command: passwd -l {{ item }}
+  changed_when: no
+  failed_when: no
+  loop: "{{ uid_zero_accounts_except_root.stdout_lines }}"
+  when:
+    - uid_zero_accounts_except_root.rc
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_6.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_6.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.6
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_7.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_7.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.7
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_8.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_8.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.8
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_8
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_9.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_9.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.9
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_9
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_10.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_10.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.10
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_10
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_11.description }}'
+  ansible.builtin.file:
+    state: absent
+    dest: "~{{ item }}/.forward"
+  loop: "{{ users.stdout_lines }}"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_11.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.11
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_11
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_12.description }}'
+  ansible.builtin.file:
+    state: absent
+    dest: "~{{ item }}/.netrc"
+  loop: "{{ users.stdout_lines }}"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_12.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.12
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_12
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_13.description }}'
+  ansible.builtin.file:
+    mode: 0600
+    dest: "~{{ item }}/.netrc"
+  failed_when: false
+  loop: "{{ users.stdout_lines }}"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_13.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.13
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_13
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_14.description }}'
+  ansible.builtin.file:
+    state: absent
+    dest: "~{{ item }}/.rhosts"
+  loop: "{{ users.stdout_lines }}"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_14.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.14
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_14
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_15.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_15.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.15
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_15
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_16.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_16.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.16
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_16
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_17.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_17.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.17
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_17
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_18.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_18.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.18
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_18
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_6_2_19.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_6_2_19.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_6.2.19
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_6_2_19
+    _current_rule_output: '{{ _output_rule }}'

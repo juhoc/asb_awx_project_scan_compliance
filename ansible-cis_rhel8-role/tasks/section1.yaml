@@ -1,0 +1,1080 @@
+---
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*cramfs\\s*/bin/true' /etc/modprobe.d/cramfs.conf || echo 'install cramfs /bin/true' > /etc/modprobe.d/cramfs.conf"
+    - "lsmod | grep cramfs>/dev/null && { rmmod cramfs; } || { /bin/true; }"
+  when:
+    - rules.rule_1_1_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*vfat\\s*/bin/true' /etc/modprobe.d/vfat.conf || echo 'install vfat /bin/true' > /etc/modprobe.d/vfat.conf"
+    - "lsmod | grep vfat>/dev/null && { rmmod vfat; } || { /bin/true; }"
+  when:
+    - rules.rule_1_1_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*squashfs\\s*/bin/true' /etc/modprobe.d/squashfs.conf || echo 'install squashfs /bin/true' > /etc/modprobe.d/squashfs.conf"
+    - "lsmod | grep squashfs>/dev/null && { rmmod squashfs; } || { /bin/true; }"
+  when:
+    - rules.rule_1_1_1_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*udf\\s*/bin/true' /etc/modprobe.d/udf.conf || echo 'install udf /bin/true' > /etc/modprobe.d/udf.conf"
+    - "lsmod | grep udf>/dev/null && { rmmod udf; } || { /bin/true; }"
+  when:
+    - rules.rule_1_1_1_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.fail:
+    msg: "{{ item.mount }} {{ item.blk }} is not correctly configured"
+  vars:
+    _rule_mountpoint: "/tmp"
+    _query: "[?mount=='/tmp']"
+    _filtered_mounted_partitions: "{{ _mounted_partitions|json_query(_query) }}"
+  failed_when:
+    - _filtered_mounted_partitions is not defined or
+      _filtered_mounted_partitions|length|int != 1 or
+      "nosuid" not in item.options or
+      "noexec" not in item.options  or
+      "nodev" not in item.options  or
+      item.fs == "tmpfs"
+  loop: "{{ _filtered_mounted_partitions }}"
+  when:
+    - rules.rule_1_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_4.enabled %},nosuid{% endif %}{% if rules.rule_1_1_5.enabled %},noexec{% endif %}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/tmp"
+    _rule_option: "nodev"
+  when:
+    - rules.rule_1_1_3.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_3.enabled %},nodev{% endif %}{% if rules.rule_1_1_5.enabled %},noexec{% endif %}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/tmp"
+    _rule_option: "nosuid"
+  when:
+    - rules.rule_1_1_4.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_5.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_3.enabled %},nodev{% endif %}{% if rules.rule_1_1_4.enabled %},nosuid{% endif %}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/tmp"
+    _rule_option: "noexec"
+  when:
+    - rules.rule_1_1_5.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_6.description }}'
+  register: _output_rule
+  ansible.builtin.fail:
+    msg: "{{ _rule_mountpoint }} should have a separate partition {{ _filtered_mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var"
+    _query: "[?mount=='/var']"
+    _filtered_mounted_partitions: "{{ _mounted_partitions|json_query(_query) }}"
+  failed_when:
+    - _filtered_mounted_partitions is not defined or
+      _filtered_mounted_partitions|length|int != 1
+  when:
+    - rules.rule_1_1_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_7.description }}'
+  register: _output_rule
+  ansible.builtin.fail:
+    msg: "{{ _rule_mountpoint }} should have a separate partition {{ _filtered_mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var/tmp"
+    _query: "[?mount=='/var/tmp']"
+    _filtered_mounted_partitions: "{{ _mounted_partitions|json_query(_query) }}"
+  failed_when:
+    - _filtered_mounted_partitions is not defined or
+      _filtered_mounted_partitions|length|int != 1
+  when:
+    - rules.rule_1_1_7.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_8.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_9.enabled %},nosuid{% endif %}{% if rules.rule_1_1_10.enabled %},noexec{% endif %}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var/tmp"
+    _rule_option: "nodev"
+  when:
+    - rules.rule_1_1_8.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_8
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_9.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_8.enabled %},nodev{% endif %}{% if rules.rule_1_1_10.enabled %},noexec{% endif %}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var/tmp"
+    _rule_option: "nosuid"
+  when:
+    - rules.rule_1_1_9.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_9
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_10.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_8.enabled %},nodev{% endif %}{% if rules.rule_1_1_9.enabled %},nosuid{% endif %}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var/tmp"
+    _rule_option: "noexec"
+  when:
+    - rules.rule_1_1_10.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_10
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_11.description }}'
+  register: _output_rule
+  ansible.builtin.fail:
+    msg: "{{ _rule_mountpoint }} should have a separate partition {{ _filtered_mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var/log"
+    _query: "[?mount=='/var/log']"
+    _filtered_mounted_partitions: "{{ _mounted_partitions|json_query(_query) }}"
+  failed_when:
+    - _filtered_mounted_partitions is not defined or
+      _filtered_mounted_partitions|length|int != 1
+  when:
+    - rules.rule_1_1_11.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_11
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_12.description }}'
+  register: _output_rule
+  ansible.builtin.fail:
+    msg: "{{ _rule_mountpoint }} should have a separate partition {{ _filtered_mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/var/log/audit"
+    _query: "[?mount=='/var/log/audit']"
+    _filtered_mounted_partitions: "{{ _mounted_partitions|json_query(_query) }}"
+  failed_when:
+    - _filtered_mounted_partitions is not defined or
+      _filtered_mounted_partitions|length|int != 1
+  when:
+    - rules.rule_1_1_12.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_12
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_13.description }}'
+  register: _output_rule
+  ansible.builtin.fail:
+    msg: "{{ _rule_mountpoint }} should have a separate partition {{ _filtered_mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/home"
+    _query: "[?mount=='/home']"
+    _filtered_mounted_partitions: "{{ _mounted_partitions|json_query(_query) }}"
+  failed_when:
+    - _filtered_mounted_partitions is not defined or
+      _filtered_mounted_partitions|length|int != 1
+  when:
+    - rules.rule_1_1_13.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_13
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_14.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: "{{ item.blk }}"
+    state: mounted
+    fstype: "{{ item.fs }}"
+    opts: "{{ _rule_option }}"
+  loop: "{{ _mounted_partitions }}"
+  vars:
+    _rule_mountpoint: "/home"
+    _rule_option: "nodev"
+  when:
+    - rules.rule_1_1_14.enabled
+    - item.mount == _rule_mountpoint
+    - _rule_option not in item.options
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_14
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_15.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: tmpfs
+    state: mounted
+    fstype: tmpfs
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_16.enabled %},nosuid{% endif %}{% if rules.rule_1_1_17.enabled %},noexec{% endif %}"
+  vars:
+    _rule_mountpoint: "/dev/shm"
+    _rule_option: "nodev"
+  when:
+    - rules.rule_1_1_15.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_15
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_16.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: tmpfs
+    state: mounted
+    fstype: tmpfs
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_15.enabled %},nodev{% endif %}{% if rules.rule_1_1_17.enabled %},noexec{% endif %}"
+  vars:
+    _rule_mountpoint: "/dev/shm"
+    _rule_option: "nosuid"
+  when:
+    - rules.rule_1_1_16.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_16
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_17.description }}'
+  register: _output_rule
+  ansible.builtin.mount:
+    path: "{{ _rule_mountpoint }}"
+    src: tmpfs
+    state: mounted
+    fstype: tmpfs
+    opts: "{{ _rule_option }}{% if rules.rule_1_1_15.enabled %},nodev{% endif %}{% if rules.rule_1_1_16.enabled %},nosuid{% endif %}"
+  vars:
+    _rule_mountpoint: "/dev/shm"
+    _rule_option: "noexec"
+  when:
+    - rules.rule_1_1_17.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_17
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_18.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_1_1_18.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_18
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_19.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_1_1_19.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_19
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_20.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_1_1_20.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_20
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_21.description }}'
+  register: _output_rule
+  ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+  when:
+    - rules.rule_1_1_21.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_21
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_22.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: autofs
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_1_1_22.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_22
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_1_23.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "grep 'install\\s*usb-storage\\s*/bin/true' /etc/modprobe.d/usb-storage.conf || echo 'install usb-storage /bin/true' > /etc/modprobe.d/usb-storage.conf"
+    - "lsmod | grep usb-storage>/dev/null && { rmmod usb-storage; } || { /bin/true; }"
+  when:
+    - rules.rule_1_1_23.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_23
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_2_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: subscription-manager identity
+  when:
+    - rules.rule_1_2_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: rhnsd
+    state: stopped
+    enabled: no
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_1_2_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+  when:
+    - rules.rule_1_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_2_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - grep ^gpgcheck /etc/yum.conf && { sed 's/^\(gpgcheck\s*=\s*\).*$/\11/g' -i /etc/yum.conf; } || { echo 'gpgcheck=1' > /etc/yum.conf; }
+    - for file in $(find /etc/yum.repos.d/ -name '*.repo'); do grep ^gpgcheck $file && { sed 's/^\(gpgcheck\s*=\s*\).*$/\11/g' -i $file; } || { /bin/true; }; done
+  when:
+    - rules.rule_1_2_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_2_5.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_1_2_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_3_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: sudo
+    state: present
+  when:
+    - rules.rule_1_3_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_3_2.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: "^(#)?Defaults use_pty(\\s|$)"
+    line: "Defaults use_pty"
+    create: yes
+  when:
+    - rules.rule_1_3_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_3_3.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: /etc/sudoers
+    regexp: '^(#)?Defaults logfile="/var/log/sudo.log(\\s|$)"'
+    line: 'Defaults logfile="/var/log/sudo.log"'
+    create: yes
+  when:
+    - rules.rule_1_3_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_3_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_4_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: aide
+    state: present
+  when:
+    - rules.rule_1_4_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_4_2.description }}'
+  register: _output_rule
+  ansible.builtin.cron:
+    name: "Run AIDE daily check"
+    minute: "5"
+    hour: "4"
+    job: "/usr/sbin/aide --check"
+    user: root
+  when:
+    - rules.rule_1_4_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_5_1.description }}'
+  register: _output_rule
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0600
+  loop:
+    - "/boot/grub2/grub.cfg"
+    - "/boot/grub2/grubenv"
+  when:
+    - rules.rule_1_5_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- name: "{{ rules.rule_1_5_2.description }} (step 1)"
+  grub_crypt:  # FIXME es un script propio, el codigo esta en library, ver como seria el nombre completo para referenciarlo
+    paraphrase: "{{ rhel8cis_bootloader_password }}"
+  register: grub_pass
+  ignore_errors: true
+  when:
+    - rules.rule_1_5_2.enabled
+    - rhel8cis_bootloader_password is defined
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_5_2.description }} (step 2)'
+  register: _output_rule
+  ansible.builtin.copy:
+    dest: /boot/grub2/user.cfg
+    content: "GRUB2_PASSWORD={{ grub_pass.passhash }}"
+  notify: grub_mkconfig
+  when:
+    - rules.rule_1_5_2.enabled
+    - rhel8cis_bootloader_password is defined
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- name: "{{ rules.rule_1_5_3.description }} (step 1)"
+  ansible.builtin.shell: "grep {{ item.result }} {{ item.path }}"
+  register: _single_mode_authentication
+  failed_when: false
+  loop:
+    - path: "/usr/lib/systemd/system/rescue.service"
+      result: 'ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue'
+    - path: "/usr/lib/systemd/system/emergency.service"
+      result: 'ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency'
+  ignore_errors: true
+  when:
+    - rules.rule_1_5_3.enabled
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_5_3.description }} (step 2)'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    path: "{{ item.item.path }}"
+    line: "{{ item.item.result }}"
+    regexp: "^(#)?ExecStart=(.*$)"
+  loop: "{{ _single_mode_authentication.results }}"
+  when:
+    - rules.rule_1_5_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_6_1.description }} (step 1)'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    state: present
+    dest: /etc/security/limits.conf
+    regexp: '^#?\\*.*core'
+    line: '* hard core 0'
+    insertbefore: '^# End of file'
+  when:
+    - rules.rule_1_6_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_6_1.description }} (step 2)'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: fs.suid_dumpable
+    value: 0
+    state: present
+    reload: yes
+    sysctl_set: yes
+    ignoreerrors: yes
+  when:
+    - rules.rule_1_6_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_6_2.description }}'
+  register: _output_rule
+  ansible.builtin.sysctl:
+    name: kernel.randomize_va_space
+    value: 2
+    state: present
+    reload: yes
+    sysctl_set: yes
+    ignoreerrors: yes
+  when:
+    - rules.rule_1_6_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: libselinux
+    state: present
+  when:
+    - rules.rule_1_7_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.replace:
+    dest: /boot/grub2/grubenv
+    regexp: '(selinux|enforcing)\s*=\s*0\s*'
+  notify: grub_mkconfig
+  when:
+    - rules.rule_1_7_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.selinux:
+    conf: /etc/selinux/config
+    policy: targeted
+    state: enforcing
+  when:
+    - rules.rule_1_7_1_3.enabled
+    - enforce_selinux is defined and enforce_selinux
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.selinux:
+    conf: /etc/selinux/config
+    policy: targeted
+    state: enforcing
+  when:
+    - rules.rule_1_7_1_4.enabled
+    - enforce_selinux is defined and enforce_selinux
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_5.description }}'
+  register: _output_rule
+  ansible.builtin.shell: ps -eZ | grep unconfined_service_t || exit 0
+  when:
+    - rules.rule_1_7_1_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_6.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name:
+      - setroubleshoot
+      - setroubleshoot-plugins
+      - setroubleshoot-server
+    state: absent
+  when:
+    - rules.rule_1_7_1_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_7_1_7.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: mcstrans
+    state: absent
+  when:
+    - rules.rule_1_7_1_7.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.template:
+    src: banners/motd.j2
+    dest: /etc/motd
+  when:
+    - rules.rule_1_8_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.template:
+    src: banners/issue.j2
+    dest: /etc/issue
+  when:
+    - rules.rule_1_8_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.template:
+    src: banners/issue.net.j2
+    dest: /etc/issue.net
+  when:
+    - rules.rule_1_8_1_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.file:
+    dest: /etc/motd
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - rules.rule_1_8_1_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_1_5.description }}'
+  register: _output_rule
+  ansible.builtin.file:
+    dest: /etc/motd
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - rules.rule_1_8_1_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_1_6.description }}'
+  register: _output_rule
+  ansible.builtin.file:
+    dest: /etc/issue.net
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - rules.rule_1_8_1_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_8_2.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: "{{ item.file }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
+    - { file: '/etc/dconf/profile/gdm', regexp: 'system-db', line: 'system-db:gdm' }
+    - { file: '/etc/dconf/profile/gdm', regexp: 'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults' }
+    - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]' }
+    - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: 'banner-message-enable', line: 'banner-message-enable=true' }
+    - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: 'banner-message-text', line: "banner-message-text='{{ rhel8cis_warning_banner }}' " }
+  when:
+    - rules.rule_1_8_2.enabled
+    - _gnome_in_use
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_9.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+  when:
+    - rules.rule_1_9.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_9
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_10.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_1_10.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_10
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_1_11.description }}'
+  register: _output_rule
+  ansible.builtin.shell: update-crypto-policies --set FIPS
+  when:
+    - rules.rule_1_11.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_11
+    _current_rule_output: '{{ _output_rule }}'
+

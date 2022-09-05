@@ -1,0 +1,8 @@
+---
+
+- name: set_fact update_cis_dict
+  ansible.builtin.set_fact:
+    rules_cis: "{{ rules_cis | combine (replace_item, recursive=true) }}"
+  vars:
+    replace_item: '{ "{{ update_var.key }}" : {{ update_var.value }} }'
+  loop: "{{ rules_cis | dict2items }}"

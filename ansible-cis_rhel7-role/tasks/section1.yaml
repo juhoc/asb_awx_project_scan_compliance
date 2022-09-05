@@ -1,0 +1,1489 @@
+---
+
+- name: '{{ rules_cis.rule_1_1_1_1.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install cramfs(\\s|$)"
+    line: "install cramfs /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_1.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.1
+    - cramfs
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_2.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install freevxfs(\\s|$)"
+    line: "install freevxfs /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_2.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.2
+    - freevxfs
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_3.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install jffs2(\\s|$)"
+    line: "install jffs2 /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_3.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.3
+    - jffs2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_4.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install hfs(\\s|$)"
+    line: "install hfs /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_4.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.4
+    - hfs
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_5.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install hfsplus(\\s|$)"
+    line: "install hfsplus /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_5.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.5
+    - hfsplus
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_6.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install squashfs(\\s|$)"
+    line: "install squashfs /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_6.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.6
+    - squashfs
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_7.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install udf(\\s|$)"
+    line: "install udf /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_7.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.7
+    - udf
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_1_8.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install vfat(\\s|$)"
+    line: "install vfat /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_1_8.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.1.8
+    - vfat
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_1_8
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_2.description }}'
+  ansible.builtin.systemd:
+    name: tmp.mount
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+    state: started
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_2.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_3.description }}\n{{ rules_cis.rule_1_1_4.description }}\n{{ rules_cis.rule_1_1_5.description }}'
+  ansible.builtin.mount:
+    path: /tmp
+    src: "{{ _tmp_mount_device }}"
+    state: mounted
+    fstype: "{{ _tmp_filesystem }}"
+    opts: nodev,nosuid,noexec
+  #notify: systemd restart tmp.mount
+  when:
+    - _tmp_mount_device is defined
+    - rules_cis.rule_1_1_3.enabled
+    - rules_cis.rule_1_1_4.enabled
+    - rules_cis.rule_1_1_5.enabled
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.3
+    - rule_1.1.4
+    - rule_1.1.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_6.description }}'
+  ansible.builtin.shell: mount | grep "on /var "
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_6.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.1.6
+    - skip_ansible_lint
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_7.description }}'
+  ansible.builtin.shell: mount | grep "on /var/tmp "
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_7.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.1.7
+    - skip_ansible_lint
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_8.description }}\n{{ rules_cis.rule_1_1_9.description }}\n{{ rules_cis.rule_1_1_10.description }}'
+  ansible.builtin.mount:
+    name: /var/tmp
+    src: "{{ rhel7cis_vartmp['source'] }}"
+    state: mounted
+    fstype: "{{ rhel7cis_vartmp['fstype'] }}"
+    opts: "{{ rhel7cis_vartmp['opts'] }}"
+  when:
+    - rhel7cis_vartmp['enabled'] == 'yes'
+    - rules_cis.rule_1_1_8.enabled
+    - rules_cis.rule_1_1_9.enabled
+    - rules_cis.rule_1_1_10.enabled
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.8
+    - rule_1.1.9
+    - rule_1.1.10
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_8
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_11.description }}'
+  ansible.builtin.shell: mount | grep "on /var/log"
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_11.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.1.11
+    - skip_ansible_lint
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_11
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+
+- name: '{{ rules_cis.rule_1_1_12.description }}'
+  ansible.builtin.shell: mount | grep "on /var/log/audit "
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_12.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.1.12
+    - skip_ansible_lint
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_12
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_13.description }}'
+  ansible.builtin.shell: mount | grep "on /home "
+  changed_when: no
+  failed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_13.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.1.13
+    - skip_ansible_lint
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_13
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_14.description }}'
+  ansible.builtin.shell: grep home /etc/fstab| grep nodev >/dev/null|| sed -i "s|^\(/dev/mapper/.*\s*/home\s*xfs\s*\)\(defaults\)\(\s*.*\)$|\1\2,nodev\3|" /etc/fstab
+  failed_when: no
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_14.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_1.1.14
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_14
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_15.description }} || {{ rules_cis.rule_1_1_16.description }} || {{ rules_cis.rule_1_1_17.description }}\n'
+  ansible.builtin.mount:
+    name: /dev/shm
+    src: tmpfs
+    state: mounted
+    fstype: tmpfs
+    opts: "defaults,nodev,nosuid,noexec"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_15.enabled
+    - rules_cis.rule_1_1_16.enabled
+    - rules_cis.rule_1_1_17.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.1.15
+    - rule_1.1.16
+    - rule_1.1.17
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_15
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_18.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_18.enabled
+  tags:
+    - level1
+    - notscored
+    - patch
+    - rule_1.1.18
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_18
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_19.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_19.enabled
+  tags:
+    - level1
+    - notscored
+    - patch
+    - rule_1.1.19
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_19
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_20.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_20.enabled
+  tags:
+    - level1
+    - notscored
+    - patch
+    - rule_1.1.20
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_20
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_21.description }}'
+  ansible.builtin.shell: df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type d -perm -0002 2>/dev/null | xargs chmod a+t
+  changed_when: no
+  failed_when: no
+  #when: sticky_bit_on_worldwritable_dirs_audit.rc == '0'
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_21.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_1.1.21
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_21
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_1_22.description }}'
+  ansible.builtin.service:
+    name: autofs
+    enabled: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_1_22.enabled
+    - not rhel7cis_allow_autofs
+    - autofs_service_status.stdout == "loaded"
+  tags:
+    - level1
+    - patch
+    - rule_1.1.22
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_1_22
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_1.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_1.enabled
+  tags:
+    - level1
+    - notscored
+    - patch
+    - rule_1.2.1
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_2.description }} (Step 1)'
+  ansible.builtin.replace:
+    name: /etc/yum.conf
+    regexp: "^gpgcheck=0"
+    replace: "gpgcheck=1"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_2.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.2.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_2.description }} (Step 2)'
+  ansible.builtin.find:
+    paths: /etc/yum.repos.d
+    patterns: "*.repo"
+  changed_when: no
+  register: yum_repos
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_2.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.2.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_2
+    _current_rule_output: '{{ yum_repos }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_2.description }} (Step 3)'
+  ansible.builtin.replace:
+    name: "{{ item.path }}"
+    regexp: "^gpgcheck=0"
+    replace: "gpgcheck=1"
+  loop:
+    - "{{ yum_repos.files }}"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_2.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.2.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_3.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_3.enabled
+  tags:
+    - level1
+    - notscored
+    - patch
+    - rule_1.2.3
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_4.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_4.enabled
+    - ansible_distribution == "RedHat"
+  tags:
+    - level1
+    - notscored
+    - patch
+    - rule_1.2.4
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_2_5.description }}'
+  ansible.builtin.service:
+    name: rhnsd
+    state: stopped
+    enabled: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_2_5.enabled
+    - ansible_distribution == "RedHat" and rhnsd_service_status.stdout == "loaded" and not rhel7cis_rhnsd_required
+  tags:
+    - level2
+    - notscored
+    - patch
+    - rule_1.2.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_3_1.description }} (Step 1)'
+  ansible.builtin.yum:
+    name: aide
+    state: present
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_3_1.enabled
+  tags:
+    - level1
+    - scored
+    - aide
+    - patch
+    - rule_1.3.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_3_1.description }} (Step 2)'
+  ansible.builtin.command: /usr/sbin/aide --init -B 'database_out=file:/var/lib/aide/aide.db.gz'
+  args:
+    creates: /var/lib/aide/aide.db.gz
+  changed_when: no
+  failed_when: no
+  async: 45
+  poll: 0
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_3_1.enabled
+    - rhel7cis_config_aide
+  tags:
+    - level1
+    - scored
+    - aide
+    - patch
+    - rule_1.3.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_3_2.description }}'
+  ansible.builtin.cron:
+    name: Run AIDE integrity check weekly
+    cron_file: "{{ rhel7cis_aide_cron['cron_file'] }}"
+    user: "{{ rhel7cis_aide_cron['cron_user'] }}"
+    minute: "{{ rhel7cis_aide_cron['aide_minute'] | default('0') }}"
+    hour: "{{ rhel7cis_aide_cron['aide_hour'] | default('5') }}"
+    day: "{{ rhel7cis_aide_cron['aide_day'] | default('*') }}"
+    month: "{{ rhel7cis_aide_cron['aide_month'] | default('*') }}"
+    weekday: "{{ rhel7cis_aide_cron['aide_weekday'] | default('*') }}"
+    job: "{{ rhel7cis_aide_cron['aide_job'] }}"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_3_2.enabled
+  tags:
+    - level1
+    - scored
+    - aide
+    - file_integrity
+    - patch
+    - rule_1.3.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_4_1.description }} (Step 1)'
+  ansible.builtin.stat:
+    path: /etc/grub2.cfg
+  register: grub_cfg
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_4_1.enabled
+  tags:
+    - level1
+    - scored
+    - grub
+    - patch
+    - rule_1.4.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_1
+    _current_rule_output: '{{ grub_cfg }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_4_1.description }} (Step 2)'
+  ansible.builtin.file:
+    path: "{{ grub_cfg.stat.lnk_source }}"
+    owner: root
+    group: root
+    mode: 0600
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_4_1.enabled
+    - grub_cfg.stat is defined
+    - grub_cfg.stat.exists is defined
+    - grub_cfg.stat.exists and grub_cfg.stat.islnk
+  tags:
+    - level1
+    - scored
+    - grub
+    - patch
+    - rule_1.4.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_4_2.description }} (Step 1)'
+  grub_crypt:
+    password: "{{ rhel7cis_bootloader_password }}"
+  register: grub_pass
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_4_2.enabled
+  tags:
+    - level1
+    - scored
+    - grub
+    - patch
+    - rule_1.4.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_2
+    _current_rule_output: '{{ grub_pass }}'
+
+
+- name: '{{ rules_cis.rule_1_4_2.description }} (Step 2)'
+  ansible.builtin.copy:
+    dest: /boot/grub2/user.cfg
+    content: "GRUB2_PASSWORD={{ grub_pass.passhash }}"
+  notify: generate new grub config
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_4_2.enabled
+    - grub_pass is defined and grub_pass.passhash is defined and grub_pass.passhash != ''
+  tags:
+    - level1
+    - scored
+    - grub
+    - patch
+    - rule_1.4.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_4_3.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_4_3.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_1.4.3
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_4_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_5_1.description }} (Step 1)'
+  ansible.builtin.lineinfile:
+    state: present
+    dest: /etc/security/limits.conf
+    regexp: '^#?\\*.*core'
+    line: '*                hard    core            0'
+    insertbefore: '^# End of file'
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_5_1.enabled
+  tags:
+    - level1
+    - scored
+    - limits
+    - patch
+    - rule_1.5.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_5_1.description }} (Step 2)'
+  ansible.builtin.sysctl:
+    name: fs.suid_dumpable
+    value: '0'
+    state: present
+    reload: yes
+    sysctl_set: yes
+    ignoreerrors: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_5_1.enabled
+  tags:
+    - level1
+    - scored
+    - sysctl
+    - patch
+    - rule_1.5.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_5_2.description }}'
+  ansible.builtin.command: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_5_2.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_1.5.2
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_5_3.description }}'
+  ansible.builtin.sysctl:
+    name: kernel.randomize_va_space
+    value: '2'
+    state: present
+    reload: yes
+    sysctl_set: yes
+    ignoreerrors: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_5_3.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.5.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_5_4.description }} (Step 1)'
+  ansible.builtin.command: prelink -ua
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_5_4.enabled
+    - prelink_installed.rc == 0
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.5.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_5_4.description }} (Step 2)'
+  ansible.builtin.yum:
+    name: prelink
+    state: absent
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_5_4.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_1.5.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_5_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_1_1.description }}'
+  ansible.builtin.replace:
+    dest: /etc/default/grub
+    regexp: '(selinux|enforcing)\s*=\s*0\s*'
+  notify: generate new grub config
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_1_1.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.6.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_1_2.description }}'
+  selinux:
+    conf: /etc/selinux/config
+    policy: "{{ rhel7cis_selinux_pol }}"
+    state: enforcing
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_1_2.enabled
+    - not rhel7cis_selinux_disable
+  tags:
+    - level2
+    - scored
+    - selinux
+    - patch
+    - rule_1.6.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_1_3.description }}'
+  ansible.builtin.selinux:
+    conf: /etc/selinux/config
+    policy: "{{ rhel7cis_selinux_pol }}"
+    state: enforcing
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_1_3.enabled
+    - not rhel7cis_selinux_disable
+  tags:
+    - level2
+    - scored
+    - selinux
+    - patch
+    - rule_1.6.1.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_1_4.description }}'
+  ansible.builtin.yum:
+    name: setroubleshoot
+    state: absent
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_1_4.enabled
+  tags:
+    - level2
+    - scored
+    - selinux
+    - patch
+    - rule_1.6.1.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_1_5.description }}'
+  ansible.builtin.yum:
+    name: mcstrans
+    state: absent
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_1_5.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.6.1.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_1_6.description }}'
+  ansible.builtin.yum:
+    name: mcstrans
+    state: absent
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_1_6.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.6.1.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_6_2.description }}'
+  ansible.builtin.yum:
+    name: libselinux
+    state: present
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_6_2.enabled
+  tags:
+    - level2
+    - scored
+    - patch
+    - rule_1.6.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_6_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_1_1.description }}'
+  ansible.builtin.template:
+    src: etc/motd.j2
+    dest: /etc/motd
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_1_1.enabled
+  tags:
+    - level1
+    - banner
+    - patch
+    - rule_1.7.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_1_2.description }}'
+  ansible.builtin.template:
+    src: etc/issue.j2
+    dest: /etc/issue
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_1_2.enabled
+  tags:
+    - level1
+    - patch
+    - rule_1.7.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_1_3.description }}'
+  ansible.builtin.template:
+    src: etc/issue.net.j2
+    dest: /etc/issue.net
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_1_3.enabled
+  tags:
+    - level1
+    - banner
+    - patch
+    - rule_1.7.1.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_1_4.description }}'
+  ansible.builtin.file:
+    dest: /etc/motd
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_1_4.enabled
+  tags:
+    - level1
+    - perms
+    - patch
+    - rule_1.7.1.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_1_5.description }}'
+  ansible.builtin.file:
+    dest: /etc/issue
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_1_5.enabled
+  tags:
+    - level1
+    - perms
+    - patch
+    - rule_1.7.1.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_1_6.description }}'
+  ansible.builtin.file:
+    dest: /etc/issue.net
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_1_6.enabled
+  tags:
+    - level1
+    - perms
+    - patch
+    - rule_1.7.1.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_7_2.description }}'
+  ansible.builtin.lineinfile:
+    dest: "{{ item.file }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - { file: '/etc/dconf/profile/gdm', regexp: 'user-db', line: 'user-db:user' }
+    - { file: '/etc/dconf/profile/gdm', regexp: 'system-db', line: 'system-db:gdm' }
+    - { file: '/etc/dconf/profile/gdm', regexp: 'file-db', line: 'file-db:/usr/share/gdm/greeter-dconf-defaults' }
+    - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: '\[org\/gnome\/login-screen\]', line: '[org/gnome/login-screen]' }
+    - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: 'banner-message-enable', line: 'banner-message-enable=true' }
+    - { file: '/etc/dconf/db/gdm.d/01-banner-message', regexp: 'banner-message-text', line: "banner-message-text='{{ rhel7cis_warning_banner }}' " }
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_7_2.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_1.7.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_7_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_1_8.description }}'
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_1_8.enabled
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_1.8
+    - skip_ansible_lint
+  failed_when: false
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_1_8
+    _current_rule_output: '{{ _output_rule }}'

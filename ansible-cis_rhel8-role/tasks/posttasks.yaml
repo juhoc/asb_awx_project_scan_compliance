@@ -1,0 +1,13 @@
+---
+
+- name: Ensure AIDE Initialization
+  ansible.builtin.shell: "{{ item }}"
+  loop:
+    - "[ -f /var/lib/aide/aide.db.gz ] || { aide --init; } && { /bin/true; }"
+    - "[ -f /var/lib/aide/aide.db.gz ] || { mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz; } && { /bin/true; }"
+  when:
+    - rules.rule_1_4_1.enabled
+
+- name: 'Set crypto policy to DEFAULT'
+  ansible.builtin.shell: update-crypto-policies --set DEFAULT
+  changed_when: false

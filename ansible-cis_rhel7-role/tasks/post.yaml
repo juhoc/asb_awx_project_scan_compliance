@@ -1,0 +1,13 @@
+---
+# Post tasks
+
+- name: Perform YUM package cleanup
+  ansible.builtin.yum:
+    autoremove: yes
+  changed_when: no
+  ignore_errors: yes
+  tags:
+    - skip_ansible_lint
+
+- name: Force all notified handlers to run at this point
+  ansible.builtin.meta: flush_handlers

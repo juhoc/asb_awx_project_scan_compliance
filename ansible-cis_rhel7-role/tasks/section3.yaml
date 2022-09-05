@@ -1,0 +1,906 @@
+---
+
+- name: '{{ rules_cis.rule_3_1_1.description }}'
+  ansible.builtin.sysctl:
+    name: net.ipv4.ip_forward
+    value: '0'
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl flush ipv4 route table
+  when:
+    - rules_cis.rule_3_1_1.enabled
+    - rhel7cis_is_router == false
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_1_2.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.send_redirects, value: 0 }
+    - { name: net.ipv4.conf.default.send_redirects, value: 0 }
+  notify:
+    - sysctl flush ipv4 route table
+  when:
+    - rules_cis.rule_3_1_2.enabled
+    - rhel7cis_is_router == false
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_1.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.accept_source_route, value: 0 }
+    - { name: net.ipv4.conf.default.accept_source_route, value: 0 }
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_1.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_2.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.accept_redirects, value: 0 }
+    - { name: net.ipv4.conf.default.accept_redirects, value: 0 }
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_2.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_3.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.secure_redirects, value: 0 }
+    - { name: net.ipv4.conf.default.secure_redirects, value: 0 }
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_3.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_4.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.log_martians, value: 1 }
+    - { name: net.ipv4.conf.default.log_martians, value: 1 }
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_4.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_5.description }}'
+  ansible.builtin.sysctl:
+    name: net.ipv4.icmp_echo_ignore_broadcasts
+    value: '1'
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_5.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_6.description }}'
+  ansible.builtin.sysctl:
+    name: net.ipv4.icmp_ignore_bogus_error_responses
+    value: '1'
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_6.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_7.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv4.conf.all.rp_filter, value: 1 }
+    - { name: net.ipv4.conf.default.rp_filter, value: 1 }
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_7.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.7
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_2_8.description }}'
+  ansible.builtin.sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: '1'
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  notify:
+    - sysctl flush ipv4 route table
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_2_8.enabled
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.2.8
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_2_8
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_3_1.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv6.conf.all.accept_ra, value: 0 }
+    - { name: net.ipv6.conf.default.accept_ra, value: 0 }
+  notify:
+    - sysctl flush ipv6 route table
+  when:
+    - rules_cis.rule_3_3_1.enabled
+    - rhel7cis_ipv6_required == true
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.3.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_3_2.description }}'
+  ansible.builtin.sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+    ignoreerrors: yes
+  loop:
+    - { name: net.ipv6.conf.all.accept_redirects, value: 0 }
+    - { name: net.ipv6.conf.default.accept_redirects, value: 0 }
+  notify:
+    - sysctl flush ipv6 route table
+  when:
+    - rules_cis.rule_3_3_2.enabled
+    - rhel7cis_ipv6_required == true
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - sysctl
+    - patch
+    - rule_3.3.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_3_3.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?options ipv6 disable="
+    line: "options ipv6 disable=1"
+    create: yes
+  when:
+    - rules_cis.rule_3_3_3.enabled
+    - rhel7cis_ipv6_required == false
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.3.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_3
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_3_3_3.description }}'
+  ansible.builtin.replace:
+    dest: /etc/default/grub
+    regexp: '(^GRUB_CMDLINE_LINUX\s*\=\s*)(?:")(.+)(?<!ipv6.disable=1)(?:")'
+    replace: '\1"\2 ipv6.disable=1"'
+  notify: generate new grub config
+  when:
+    - rules_cis.rule_3_3_3.enabled
+    - rhel7cis_ipv6_required == false
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.3.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_3_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_4_1.description }}'
+  ansible.builtin.yum:
+    name: tcp_wrappers
+    state: present
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_4_1.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.4.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_4_2.description }}'
+  ansible.builtin.template:
+    src: hosts.allow.j2
+    dest: /etc/hosts.allow
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_4_2.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.4.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_4_3.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts.deny
+    regexp: "^(#)?ALL"
+    line: "ALL: ALL"
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_4_3.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.4.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_4_4.description }}'
+  ansible.builtin.file:
+    dest: /etc/hosts.allow
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_4_4.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.4.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_4_5.description }}'
+  ansible.builtin.file:
+    dest: /etc/hosts.deny
+    owner: root
+    group: root
+    mode: 0644
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_4_5.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.4.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_4_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_5_1.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install dccp(\\s|$)"
+    line: "install dccp /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_5_1.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.5.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_5_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_5_2.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install sctp(\\s|$)"
+    line: "install sctp /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_5_2.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.5.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_5_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_5_3.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install rds(\\s|$)"
+    line: "install rds /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_5_3.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.5.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_5_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_5_4.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/modprobe.d/CIS.conf
+    regexp: "^(#)?install tipc(\\s|$)"
+    line: "install tipc /bin/true"
+    create: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_3_5_4.enabled
+  tags:
+    - level1
+    - patch
+    - rule_3.5.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_5_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_6.description }}'
+  ansible.builtin.yum:
+    name: firewalld
+    state: present
+  when:
+    - rules_cis.rule_3_6.enabled
+    - rhel7cis_firewall == "firewalld"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_3_6.description }}'
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: yes
+  when:
+    - rules_cis.rule_3_6.enabled
+    - rhel7cis_firewall == "firewalld"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_6_1.description }}'
+  ansible.builtin.yum:
+    name: iptables
+    state: present
+  when:
+    - rhel7cis_firewall == "iptables"
+    - rules_cis.rule_3_6_1.enabled
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_1
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_3_6_1.description }}'
+  ansible.builtin.service:
+    name: iptables
+    state: started
+    enabled: yes
+  when:
+    - rules_cis.rule_3_6_1.enabled
+    - rhel7cis_firewall == "iptables"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_6_2.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/firewalld/firewalld.conf
+    regexp: "^DefaultZone"
+    line: "DefaultZone=drop"
+  when:
+    - rules_cis.rule_3_6_2.enabled
+    - rhel7cis_firewall == "firewalld"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_2
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_3_6_2.description }}'
+  firewalld:
+    state: enabled
+    zone: drop
+    permanent: true
+  when:
+    - rules_cis.rule_3_6_2.enabled
+    - rhel7cis_firewall == "firewalld"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_2
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_3_6_2.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  when:
+    - rules_cis.rule_3_6_2.enabled
+    - rhel7cis_firewall == "iptables"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.2
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_6_3.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  when:
+    - rules_cis.rule_3_6_3.enabled
+    - rhel7cis_firewall == "iptables"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.3
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_6_4.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  when:
+    - rules_cis.rule_3_6_4.enabled
+    - rhel7cis_firewall == "iptables"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.4
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_6_5.description }}'
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    zone: drop
+    permanent: true
+    immediate: true
+  notify: restart firewalld
+  loop: "{{ rhel7cis_firewall_services }}"
+  when:
+    - rules_cis.rule_3_6_5.enabled
+    - rhel7cis_firewall == "firewalld"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_5
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_3_6_5.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  when:
+    - rhel7cis_firewall == "iptables"
+    - rules_cis.rule_3_6_5.enabled
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_3.6.5
+    - notimplemented
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_6_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_3_7.description }}'
+  ansible.builtin.shell: /bin/true
+  changed_when: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+  tags:
+    - level1
+    - level2
+    - patch
+    - rule_3.7
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_3_7
+    _current_rule_output: '{{ _output_rule }}'
+

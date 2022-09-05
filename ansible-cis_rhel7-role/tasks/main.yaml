@@ -1,0 +1,130 @@
+---
+# tasks file
+
+- name: Update rules_cis dict for nova-compute products
+  block:
+    - name: include_vars disabled_nova
+      ansible.builtin.include_vars: "{{ role_path }}/defaults/disabled_nova.yaml"
+
+    - name: include_tasks update_cis_dict
+      ansible.builtin.include_tasks: update_cis_dict.yaml
+      loop: "{{ rules_nova_cis | dict2items }}"
+      loop_control:
+        loop_var: update_var
+  when:
+    - ansible_local.physics.product is defined
+#    - ansible_local.physics.product == 'test_sec'
+    - ansible_local.physics.product == 'nova-compute'
+
+- name: print rules_cis cis debug
+  ansible.builtin.debug:
+    msg: "{{ item }} => {{ rules_cis[item].enabled }}"
+  loop: "{{ rules_cis | flatten(1) }}"
+
+
+# Put SELinux in enforcing mode, logging actions that would be blocked.
+- name: install selinux dependency
+  ansible.builtin.yum:
+    name: libselinux-python
+    state: present
+  become: true
+
+- name: selinux enforcing
+  ansible.builtin.selinux:
+    policy: targeted
+    state: enforcing
+
+- name: Disable Password Authentication
+  ansible.builtin.lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: '^(#)?PermitRootLogin'
+    line: "PermitRootLogin {{ {True: 'yes', False: 'no'}[rhel7_sshd_config['PermitRootLogin']] | default(rhel7_sshd_config['PermitRootLogin']) }}"
+  notify: restart sshd
+
+# Review rhel7_sshd_config operations
+- name: Disable SSH Root Login
+  ansible.builtin.lineinfile:
+    state: present
+    dest: /etc/ssh/sshd_config
+    regexp: '^(#)?PasswordAuthentication'
+    line: "PasswordAuthentication {{ {True: 'yes', False: 'no'}[rhel7_sshd_config['PasswordAuthentication']] | default(rhel7_sshd_config['PasswordAuthentication']) }}"
+  notify: restart sshd
+
+- name: Disable UseDNS
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^UseDNS'
+    line: 'UseDNS no'
+
+# this applies only to cloud-init, should not fail if not installed, added "failed_when: false"
+- name: delete ssh keys
+  ansible.builtin.lineinfile:
+    dest: /etc/cloud/cloud.cfg
+    regexp: '^ssh_deletekeys'
+    line: 'ssh_deletekeys:   1'
+  failed_when: false
+
+- name: get tmp mountpoints
+  ansible.builtin.set_fact:
+    _tmp_mount_device: "{{ item.device }}"
+  loop: "{{ ansible_mounts }}"
+  when: item.mount == "/tmp"
+  no_log: true
+
+- name: get tmp filesystem
+  ansible.builtin.set_fact:
+    _tmp_filesystem: "{{ item.fstype }}"
+  loop: "{{ ansible_mounts }}"
+  when: item.mount == "/tmp"
+  no_log: true
+
+# tasks file for RHEL7-CIS
+- name: Check OS version and family
+  ansible.builtin.fail:
+    msg: "This role can only be run against RHEL 7. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+  when:
+    - ansible_os_family == 'RedHat'
+    - ansible_distribution_major_version is version_compare('7', '!=')
+  tags:
+    - always
+
+- name: Check ansible version
+  ansible.builtin.fail:
+    msg: You must use ansible 2.1 or greater
+  when: not ansible_version.full is version_compare('2.1', '>=')
+  tags:
+    - always
+
+- ansible.builtin.include: prelim.yaml
+  become: yes
+  tags:
+    - prelim_tasks
+    - always
+
+- name: debug rule_1_1_1_1
+  ansible.builtin.debug: var=rules_cis.rule_1_1_1_1
+
+- ansible.builtin.include: section1.yaml
+  become: yes
+
+- ansible.builtin.include: section2.yaml
+  become: yes
+
+- ansible.builtin.include: section3.yaml
+  become: yes
+
+- ansible.builtin.include: section4.yaml
+  become: yes
+
+- ansible.builtin.include: section5.yaml
+  become: yes
+
+- ansible.builtin.include: section6.yaml
+  become: yes
+
+- ansible.builtin.include: post.yaml
+  become: yes
+
+- name: show reports
+  ansible.builtin.include: report.yaml

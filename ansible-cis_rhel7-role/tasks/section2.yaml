@@ -1,0 +1,1228 @@
+---
+
+- name: '{{ rules_cis.rule_2_1_1.description }}'
+  block:
+    - name: "{{ rules_cis.rule_2_1_1.description }} | chargen-dgram"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/chargen-dgram
+      register: chargen_dgram_service
+
+    - name: "{{ rules_cis.rule_2_1_1.description }} | chargen-dgram"
+      ansible.builtin.command: chkconfig chargen-dgram off
+      notify: restart xinetd
+      when:
+        - chargen_dgram_service.stat is defined
+        - chargen_dgram_service.stat.exists is defined
+        - chargen_dgram_service.stat.exists
+      tags:
+        - skip_ansible_lint
+
+    - name: "{{ rules_cis.rule_2_1_1.description }} | chargen-stream"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/chargen-stream
+      register: chargen_stream_service
+
+    - name: "{{ rules_cis.rule_2_1_1.description }} | chargen-stream"
+      ansible.builtin.command: chkconfig chargen-stream off
+      notify: restart xinetd
+      when:
+        - chargen_stream_service.stat is defined
+        - chargen_stream_service.stat.exists is defined
+        - chargen_stream_service.stat.exists
+      tags:
+        - skip_ansible_lint
+      register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_1_1.enabled
+  tags:
+    - level1
+    - scored
+    - services
+    - patch
+    - rule_2.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: "{{ rules_cis.rule_2_1_2.description }} | daytime-dgram,daytime-stream"
+  block:
+    - name: "{{ rules_cis.rule_2_1_2.description }} | daytime-dgram"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/daytime-dgram
+      register: daytime_dgram_service
+
+    - name: "{{ rules_cis.rule_2_1_2.description }} | daytime-dgram"
+      ansible.builtin.command: chkconfig daytime-dgram off
+      notify: restart xinetd
+      when:
+        - daytime_dgram_service.stat is defined
+        - daytime_dgram_service.stat.exists is defined
+        - daytime_dgram_service.stat.exists
+      tags:
+        - skip_ansible_lint
+
+    - name: "{{ rules_cis.rule_2_1_2.description }} | daytime-stream"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/daytime-stream
+      register: daytime_stream_service
+
+    - name: "{{ rules_cis.rule_2_1_2.description }} | daytime-stream"
+      ansible.builtin.command: chkconfig daytime-stream off
+      notify: restart xinetd
+      when:
+        - daytime_stream_service.stat is defined
+        - daytime_stream_service.stat.exists is defined
+        - daytime_stream_service.stat.exists
+      tags:
+        - skip_ansible_lint
+      register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_1_2.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_2.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: "{{ rules_cis.rule_2_1_3.description }} | discard-dgram,discard-stream"
+  block:
+    - name: "{{ rules_cis.rule_2_1_3.description }} | discard-dgram"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/discard-dgram
+      register: discard_dgram_service
+
+    - name: "{{ rules_cis.rule_2_1_3.description }} | discard-dgram"
+      ansible.builtin.command: chkconfig discard-dgram off
+      notify: restart xinetd
+      when:
+        - discard_dgram_service.stat is defined
+        - discard_dgram_service.stat.exists is defined
+        - discard_dgram_service.stat.exists
+      tags:
+        - skip_ansible_lint
+
+    - name: "{{ rules_cis.rule_2_1_3.description }} | discard-stream"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/discard-stream
+      register: discard_stream_service
+
+    - name: "{{ rules_cis.rule_2_1_3.description }} | discard-stream"
+      ansible.builtin.command: chkconfig discard-stream off
+      notify: restart xinetd
+      when:
+        - discard_stream_service.stat is defined
+        - discard_stream_service.stat.exists is defined
+        - discard_stream_service.stat.exists
+      tags:
+        - skip_ansible_lint
+      register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_1_3.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_2.1.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: "{{ rules_cis.rule_2_1_4.description }} | echo-dgram,echo-stream"
+  block:
+    - name: "{{ rules_cis.rule_2_1_4.description }} | echo-dgram"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/echo-dgram
+      register: echo_dgram_service
+
+    - name: "{{ rules_cis.rule_2_1_4.description }} | echo-dgram"
+      ansible.builtin.command: chkconfig echo-dgram off
+      notify: restart xinetd
+      when:
+        - echo_dgram_service.stat is defined
+        - echo_dgram_service.stat.exists is defined
+        - echo_dgram_service.stat.exists
+      tags:
+        - skip_ansible_lint
+
+    - name: "{{ rules_cis.rule_2_1_4.description }} | echo-stream"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/echo-stream
+      register: echo_stream_service
+
+    - name: "{{ rules_cis.rule_2_1_4.description }} | echo-stream"
+      ansible.builtin.command: chkconfig echo-stream off
+      notify: restart xinetd
+      when:
+        - echo_stream_service.stat is defined
+        - echo_stream_service.stat.exists is defined
+        - echo_stream_service.stat.exists
+      tags:
+        - skip_ansible_lint
+      register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_1_4.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_2.1.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: "{{ rules_cis.rule_2_1_5.description }} | time-dgram,time-stream"
+  block:
+    - name: "{{ rules_cis.rule_2_1_5.description }} | time-dgram"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/time-dgram
+      register: time_dgram_service
+
+    - name: "{{ rules_cis.rule_2_1_5.description }} | time-dgram"
+      ansible.builtin.command: chkconfig time-dgram off
+      notify: restart xinetd
+      when:
+        - time_dgram_service.stat is defined
+        - time_dgram_service.stat.exists is defined
+        - time_dgram_service.stat.exists
+      tags:
+        - skip_ansible_lint
+
+    - name: "{{ rules_cis.rule_2_1_5.description }} | time-stream"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/time-stream
+      register: time_stream_service
+
+    - name: "{{ rules_cis.rule_2_1_5.description }} | time-stream"
+      ansible.builtin.command: chkconfig time-stream off
+      notify: restart xinetd
+      when:
+        - time_stream_service.stat is defined
+        - time_stream_service.stat.exists is defined
+        - time_stream_service.stat.exists
+      tags:
+        - skip_ansible_lint
+      register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_1_5.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_2.1.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_1_6.description }}'
+  block:
+    - name: "{{ rules_cis.rule_2_1_6.description }} (Step 1)"
+      ansible.builtin.stat:
+        path: /etc/xinetd.d/tftp
+      register: tftp_service
+
+    - name: "{{ rules_cis.rule_2_1_6.description }} (Step 2)"
+      ansible.builtin.command: chkconfig tftp off
+      notify: restart xinetd
+      when:
+        - tftp_service.stat is defined
+        - tftp_service.stat.exists is defined
+        - not tftp_service.stat.exists and rhel7cis_tftp_server
+      tags:
+        - skip_ansible_lint
+      register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_1_6.enabled
+  tags:
+    - level1
+    - scored
+    - patch
+    - rule_2.1.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_1_7.description }}'
+  ansible.builtin.service:
+    name: xinetd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_1_7.enabled
+    - xinetd_service_status.stdout == "loaded" and not rhel7cis_xinetd_required
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - scored
+    - rule_2.1.7
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_1_1.description }} - service install'
+  ansible.builtin.yum:
+    name: "{{ rhel7cis_time_synchronization }}"
+    state: present
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_2_1_1.enabled
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_1_1.description }} - service start'
+  ansible.builtin.service:
+    name: "{{ rhel7cis_time_synchronization }}d"
+    state: started
+    enabled: yes
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_2_1_1.enabled
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_1_1.description }} - service stop ntp'
+  ansible.builtin.service:
+    name: ntpd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_1_1.enabled
+    - rhel7cis_time_synchronization == "chrony" and ntpd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_1_1.description }} - service stop chrony'
+  ansible.builtin.service:
+    name: chronyd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_1_1.enabled
+    - rhel7cis_time_synchronization == "ntp" and chronyd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_1_2.description }} | modify /etc/ntp.conf'
+  ansible.builtin.template:
+    src: ntp.conf.j2
+    dest: /etc/ntp.conf
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - rules_cis.rule_2_2_1_2.enabled
+    - rhel7cis_time_synchronization == "ntp"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_1_2.description }} | modify /etc/sysconfig/ntpd'
+  ansible.builtin.lineinfile:
+    dest: /etc/sysconfig/ntpd
+    regexp: "^(#)?OPTIONS"
+    line: "OPTIONS=\"-u ntp:ntp\""
+  when:
+    - rhel7cis_time_synchronization == "ntp"
+    - rules_cis.rule_2_2_1_2.enabled
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_1_2.description }} | modify /usr/lib/systemd/system/ntpd.service'
+  ansible.builtin.lineinfile:
+    dest: /usr/lib/systemd/system/ntpd.service
+    regexp: "^(#)?ExecStart"
+    line: "ExecStart=/usr/sbin/ntpd -u ntp:ntp $OPTIONS"
+  when:
+    - rules_cis.rule_2_2_1_2.enabled
+    - rhel7cis_time_synchronization == "ntp"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_1_3.description }}'
+  ansible.builtin.template:
+    src: chrony.conf.j2
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - rules_cis.rule_2_2_1_3.enabled
+    - rhel7cis_time_synchronization == "chrony"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_1_3.description }} | modify /etc/sysconfig/chronyd'
+  ansible.builtin.lineinfile:
+    dest: /etc/sysconfig/chronyd
+    regexp: "^(#)?OPTIONS"
+    line: "OPTIONS=\"-u chrony\""
+    state: present
+    create: yes
+  when:
+    - rules_cis.rule_2_2_1_3.enabled
+    - rhel7cis_time_synchronization == "chrony"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.1.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_2.description }}'
+  ansible.builtin.yum:
+    name:
+      - "@X Window System"
+      - "xorg-x11*"
+    state: absent
+  when:
+    - rules_cis.rule_2_2_2.enabled
+    - not rhel7cis_xwindows_required
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - xwindows
+    - patch
+    - rule_2.2.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_3.description }}'
+  ansible.builtin.service:
+    name: avahi-daemon
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_3.enabled
+    - not rhel7cis_avahi_server and avahi_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - avahi
+    - services
+    - patch
+    - rule_2.2.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_4.description }}'
+  ansible.builtin.service:
+    name: cups
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_4.enabled
+    - not rhel7cis_cups_server and cups_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - cups
+    - services
+    - patch
+    - rule_2.2.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_5.description }}'
+  ansible.builtin.service:
+    name: dhcpd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_5.enabled
+    - not rhel7cis_dhcp_server
+    - dhcpd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - dhcp
+    - services
+    - patch
+    - rule_2.2.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_6.description }}'
+  ansible.builtin.service:
+    name: slapd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_6.enabled
+    - not rhel7cis_ldap_server
+    - slapd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - ldap
+    - services
+    - patch
+    - rule_2.2.6
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_6
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_7.description }}'
+  ansible.builtin.service:
+    name: nfs
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_7.enabled
+    - not rhel7cis_nfs_rpc_server
+    - nfs_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - nfs
+    - rpc
+    - services
+    - patch
+    - rule_2.2.7
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_7
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules_cis.rule_2_2_7.description }}'
+  ansible.builtin.service:
+    name: rpcbind
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_7.enabled
+    - not rhel7cis_nfs_rpc_server
+    - rpcbind_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - nfs
+    - rpc
+    - services
+    - patch
+    - rule_2.2.7
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_7
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_8.description }}'
+  ansible.builtin.service:
+    name: named
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_8.enabled
+    - not rhel7cis_named_server
+    - named_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.8
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_8
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_9.description }}'
+  ansible.builtin.service:
+    name: vsftpd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_9.enabled
+    - not rhel7cis_vsftpd_server
+    - vsftpd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.9
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_9
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_10.description }}'
+  ansible.builtin.service:
+    name: httpd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_10.enabled
+    - not rhel7cis_httpd_server
+    - httpd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.10
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_10
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_11.description }}'
+  ansible.builtin.service:
+    name: dovecot
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_11.enabled
+    - not rhel7cis_dovecot_server
+    - dovecot_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.11
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_11
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_12.description }}'
+  ansible.builtin.service:
+    name: smb
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_12.enabled
+    - not rhel7cis_smb_server
+    - smb_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.12
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_12
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_13.description }}'
+  ansible.builtin.service:
+    name: squid
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_13.enabled
+    - not rhel7cis_squid_server
+    - squid_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.13
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_13
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_14.description }}'
+  ansible.builtin.service:
+    name: snmpd
+    state: stopped
+    enabled: no
+  register: _output_rule
+  ignore_errors: yes
+  when:
+    - rules_cis.rule_2_2_14.enabled
+    - not rhel7cis_snmp_server
+    - snmpd_service_status.stdout == "loaded"
+  tags:
+    - level1
+    - patch
+    - rule_2.2.14
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_14
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_15.description }}'
+  ansible.builtin.lineinfile:
+    dest: /etc/postfix/main.cf
+    regexp: "^(#)?inet_interfaces"
+    line: "inet_interfaces = localhost"
+  when:
+    - rules_cis.rule_2_2_15.enabled
+    - not rhel7cis_is_mail_server
+    - postfix_installed.rc == 0
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.15
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_15
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_16.description }}'
+  ansible.builtin.service:
+    name: ypserv
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_16.enabled
+    - not rhel7cis_nis_server
+    - ypserv_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.16
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_16
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_17.description }} | rsh'
+  ansible.builtin.service:
+    name: rsh.socket
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_17.enabled
+    - not rhel7cis_rsh_server
+    - rsh_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.17
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_17
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_17.description }} | rlogin'
+  ansible.builtin.service:
+    name: rlogin.socket
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_17.enabled
+    - not rhel7cis_rsh_server
+    - rlogin_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.17
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_17
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_17.description }} | rexec'
+  ansible.builtin.service:
+    name: rexec.socket
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_17.enabled
+    - not rhel7cis_rsh_server
+    - rexec_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.17
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_17
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_18.description }}'
+  ansible.builtin.service:
+    name: ntalk
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_18.enabled
+    - not rhel7cis_ntalk_server
+    - ntalk_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.18
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_18
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_19.description }}'
+  ansible.builtin.service:
+    name: telnet
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_19.enabled
+    - not rhel7cis_telnet_server
+    - telnet_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.19
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_19
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_20.description }}'
+  ansible.builtin.service:
+    name: tftp
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_20.enabled
+    - not rhel7cis_tftp_server
+    - tftp_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - scored
+    - insecure_services
+    - tftp
+    - patch
+    - rule_2.2.20
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_20
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_2_21.description }}'
+  ansible.builtin.service:
+    name: rsyncd
+    state: stopped
+    enabled: no
+  when:
+    - rules_cis.rule_2_2_21.enabled
+    - not rhel7cis_rsyncd_server
+    - rsyncd_service_status.stdout == "loaded"
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.2.21
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_21
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_3_1.description }}'
+  ansible.builtin.yum:
+    name: ypbind
+    state: absent
+  when:
+    - rules_cis.rule_2_3_1.enabled
+    - not rhel7cis_ypbind_required
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.3.1
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_3_2.description }}'
+  ansible.builtin.yum:
+    name: rsh
+    state: absent
+  when:
+    - rules_cis.rule_2_3_2.enabled
+    - not rhel7cis_rsh_required
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.3.2
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_3_3.description }}'
+  ansible.builtin.yum:
+    name: talk
+    state: absent
+  when:
+    - not rhel7cis_talk_required
+    - rules_cis.rule_2_3_3.enabled
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.3.3
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_3
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_3_4.description }}'
+  ansible.builtin.yum:
+    name: telnet
+    state: absent
+  when:
+    - rules_cis.rule_2_3_4.enabled
+    - not rhel7cis_telnet_required
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.3.4
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_4
+    _current_rule_output: '{{ _output_rule }}'
+
+# ----
+
+
+- name: '{{ rules_cis.rule_2_3_5.description }}'
+  ansible.builtin.yum:
+    name: openldap-clients
+    state: absent
+  when:
+    - rules_cis.rule_2_3_5.enabled
+    - not rhel7cis_openldap_clients_required
+  register: _output_rule
+  ignore_errors: yes
+  tags:
+    - level1
+    - patch
+    - rule_2.3.5
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_5
+    _current_rule_output: '{{ _output_rule }}'
+

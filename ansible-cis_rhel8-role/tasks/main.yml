@@ -1,0 +1,29 @@
+---
+# tasks file for ansible-cis_rhel8-role
+
+- name: collect system informations
+  ansible.builtin.include: pretasks.yaml
+
+- name: Section 1 Initial Setup
+  ansible.builtin.include: section1.yaml
+
+- name: Section 2 Services
+  ansible.builtin.include: section2.yaml
+
+- name: Section 3 Logging and Auditing
+  ansible.builtin.include: section3.yaml
+
+- name: Section 4 Network Configuration
+  ansible.builtin.include: section4.yaml
+
+- name: Section 5 Access, Authentication and Authorization
+  ansible.builtin.include: section5.yaml
+
+- name: Section 6 System Maintenance
+  ansible.builtin.include: section6.yaml
+
+- name: closing tasks
+  ansible.builtin.include: posttasks.yaml
+
+- name: show reports
+  ansible.builtin.include: report.yaml

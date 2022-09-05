@@ -1,0 +1,645 @@
+---
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: audit-libs
+    state: present
+  when:
+    - rules.rule_4_1_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: auditd
+    state: started
+    enabled: true
+  when:
+    - rules.rule_4_1_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.replace:
+    dest: /etc/default/grub
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  loop:
+    - regexp: '(?:audit=\d?\s*)'
+      replace: ''
+    - regexp: '(^GRUB_CMDLINE_LINUX\s*\=\s*)(?:")(.+)(?<!audit=\d)(?:")'
+      replace: '\1"\2 audit=1"'
+  notify: grub_mkconfig
+  when:
+    - rules.rule_4_1_1_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.replace:
+    dest: /etc/default/grub
+    regexp: '(^GRUB_CMDLINE_LINUX\s*\=\s*)(?:")(.+)(?<!audit_backlog_limit=8192)(?:")'
+    replace: '\1"\2 audit_backlog_limit=8192"'
+  when:
+    - rules.rule_4_1_1_4.enabled
+  notify: grub_mkconfig
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_2_1.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: /etc/audit/auditd.conf
+    regexp: "^max_log_file( |=)"
+    line: "max_log_file = 500"
+    state: present
+  when:
+    - rules.rule_4_1_2_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: /etc/audit/auditd.conf
+    regexp: "^max_log_file_action( |=)"
+    line: "max_log_file_action = ROTATE"
+    state: present
+  when:
+    - rules.rule_4_1_2_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: /etc/audit/auditd.conf
+    regexp: "^space_left_action( |=)"
+    line: "space_left_action = EMAIL"
+    state: present
+  when:
+    - rules.rule_4_1_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_3.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /etc/sudoers -p wa -k scope"
+    - "-w /etc/sudoers.d/ -p wa -k scope"
+  when:
+    - rules.rule_4_1_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /var/log/faillog -p wa -k logins"
+    - "-w /var/log/lastlog -p wa -k logins"
+  when:
+    - rules.rule_4_1_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_5.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /var/run/utmp -p wa -k session"
+    - "-w /var/log/wtmp -p wa -k logins"
+    - "-w /var/log/btmp -p wa -k logins"
+  when:
+    - rules.rule_4_1_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_6.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change"
+    - "-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change"
+    - "-a always,exit -F arch=b64 -S clock_settime -k time-change"
+    - "-a always,exit -F arch=b32 -S clock_settime -k time-change"
+    - "-w /etc/localtime -p wa -k time-change"
+  when:
+    - rules.rule_4_1_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_7.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /etc/selinux/ -p wa -k MAC-policy"
+    - "-w /usr/share/selinux/ -p wa -k MAC-policy"
+  when:
+    - rules.rule_4_1_7.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_7
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_8.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F arch=b64 -S sethostname -S setdomainname -k system-locale"
+    - "-a always,exit -F arch=b32 -S sethostname -S setdomainname -k system-locale"
+    - "-w /etc/issue -p wa -k system-locale"
+    - "-w /etc/issue.net -p wa -k system-locale"
+    - "-w /etc/hosts -p wa -k system-locale"
+    - "-w /etc/sysconfig/network -p wa -k system-locale"
+  when:
+    - rules.rule_4_1_8.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_8
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_9.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod"
+    - "-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=1000 -F auid!=4294967295 -k perm_mod"
+    - "-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod"
+    - "-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=1000 -F auid!=4294967295 -k perm_mod"
+    - "-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod"
+    - "-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod"
+  when:
+    - rules.rule_4_1_9.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_9
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_10.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
+    - "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=4294967295 -k access"
+    - "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
+    - "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=4294967295 -k access"
+  when:
+    - rules.rule_4_1_10.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_10
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_11.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /etc/group -p wa -k identity"
+    - "-w /etc/passwd -p wa -k identity"
+    - "-w /etc/gshadow -p wa -k identity"
+    - "-w /etc/shadow -p wa -k identity"
+    - "-w /etc/security/opasswd -p wa -k identity"
+  when:
+    - rules.rule_4_1_11.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_11
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_12.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+    - "-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts"
+  when:
+    - rules.rule_4_1_12.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_12
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_13.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F path=/usr/bin/chage -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/gpasswd -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/newgrp -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/mount -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/su -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/umount -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/write -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/sudo -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/pkexec -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/sbin/grub2-set-bootflag -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/sbin/unix_chkpwd -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/sbin/pam_timestamp_check -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/sbin/userhelper -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/lib/polkit-1/polkit-agent-helper-1 -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/libexec/dbus-1/dbus-daemon-launch-helper -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/libexec/utempter/utempter -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+    - "-a always,exit -F path=/usr/libexec/openssh/ssh-keysign -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged"
+  when:
+    - rules.rule_4_1_13.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_13
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_14.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete"
+    - "-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=4294967295 -k delete"
+  when:
+    - rules.rule_4_1_14.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_14
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_15.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /sbin/insmod -p x -k modules"
+    - "-w /sbin/rmmod -p x -k modules"
+    - "-w /sbin/modprobe -p x -k modules"
+    - "-a always,exit -F arch=b64 -S init_module -S delete_module -k modules"
+  when:
+    - rules.rule_4_1_15.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_15
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_16.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: "# END CIS RULES"
+  notify: _reload_auditd
+  loop:
+    - "-w /var/log/sudo.log -p wa -k actions"
+  when:
+    - rules.rule_4_1_16.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_16
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_1_17.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    name: /etc/audit/rules.d/audit.rules
+    line: "{{ item }}"
+    insertbefore: EOF
+  notify: _reload_auditd
+  loop:
+    - "-e 2"
+  when:
+    - rules.rule_4_1_17.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_1_17
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: rsyslog
+    state: present
+  when:
+    - rules.rule_4_2_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: rsyslog
+    state: started
+    enabled: true
+  when:
+    - rules.rule_4_2_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+
+- name: '{{ rules.rule_4_2_1_3.description }} (step 1)'
+  ansible.builtin.find:
+    paths: /etc/rsyslog.d
+    patterns: '*.conf'
+  register: _rsyslog_conf_filelist
+  when:
+    - rules.rule_4_2_1_3.enabled
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_1_3.description }} (step 2)'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: "{{ item.path }}"
+    regexp: '^\$FileCreateMode'
+    line: '$FileCreateMode 0640'
+  when:
+    - rules.rule_4_2_1_3.enabled
+    - _rsyslog_conf_filelist.files is defined
+    - _rsyslog_conf_filelist.files != []
+  loop: "{{ _rsyslog_conf_filelist.files | flatten(levels=1) }}"
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- name: '{{ rules.rule_4_2_1_3.description }} (step 3)'
+  ignore_errors: 'true'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: "/etc/rsyslog.conf"
+    regexp: '^\$FileCreateMode'
+    line: '$FileCreateMode 0640'
+  when:
+    - rules.rule_4_2_1_3.enabled
+
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_1_4.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_4_2_1_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_1_5.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_4_2_1_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_1_6.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_4_2_1_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_1_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_2_1.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: "/etc/systemd/journald.conf"
+    regexp: '^\$ForwardToSyslog'
+    line: 'ForwardToSyslog=yes'
+  when:
+    - rules.rule_4_2_2_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_2_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: "/etc/systemd/journald.conf"
+    regexp: '^\$Compress'
+    line: 'Compress=yes'
+  when:
+    - rules.rule_4_2_2_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: "/etc/systemd/journald.conf"
+    regexp: '^\$Storage'
+    line: 'Storage=persistent'
+  when:
+    - rules.rule_4_2_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.command: find /var/log -type f -exec chmod g-wx,o-rwx {} +
+  when:
+    - rules.rule_4_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_4_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_4_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_4_3
+    _current_rule_output: '{{ _output_rule }}'
+

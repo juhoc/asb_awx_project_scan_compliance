@@ -1,0 +1,85 @@
+---
+
+- name: check dictionary for inconsistency
+  ansible.builtin.set_fact:
+    _inconsistent_rules: "{{ _inconsistent_rules | default({}) | combine( {item: rules[item]} ) }}"
+  when:
+    - (not rules[item]['enabled'] and rules[item]['observations'] is not defined) or (not rules[item]['enabled'] and rules[item]['observations'] is defined and rules[item]['observations']| length == 0)
+  loop: "{{ rules | flatten(levels=1) }}"
+
+- name: print inconsistency if any
+  ansible.builtin.debug:
+    var: _inconsistent_rules
+  when: _inconsistent_rules != {}
+
+- name: stop execution if dictionary contains inconsistencies
+  ansible.builtin.fail:
+    msg: "please check dictionary for inconsistent rules (above)"
+  when: _inconsistent_rules != {}
+
+- name: gather facts
+  ansible.builtin.setup:
+
+- name: collect partitions infomation
+  ansible.builtin.set_fact:
+    _mounted_partitions: "{{ _mounted_partitions|default([]) + [ {'blk': item.1.device, 'fs': item.1.fstype, 'mount': item.1.mount, 'options': item.1.options|regex_findall('nosuid|nodev|noexec') } ] }}"
+  loop: "{{ _list_CIS_partitions | product(ansible_mounts) | list }}"
+  when: item.1.mount == item.0
+
+- name: gather all audit configuration files
+  ansible.builtin.find:
+    path: /etc/audit/rules.d/
+    excludes: audit.rules
+  register: _audit_rules_files
+
+- name: remove unnecessary files
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ _audit_rules_files.files }}"
+  when:
+    - _audit_rules_files.files is defined
+    - _audit_rules_files.files != []
+
+- name: deploy default auditd template
+  ansible.builtin.copy:
+    src: auditrules.d/audit.rules
+    dest: /etc/audit/rules.d/audit.rules
+    mode: 0600
+    owner: root
+    group: root
+
+- name: deploy logrotate template for sudo logs
+  ansible.builtin.copy:
+    src: logrotate/sudo
+    dest: /etc/logrotate.d/sudo
+    mode: 0644
+    owner: root
+    group: root
+
+- name: "unset root password"
+  ansible.builtin.shell: usermod -p "*" root
+  register: _usermod_root
+  changed_when: _usermod_root.rc != 0
+
+# https://access.redhat.com/solutions/1752633
+- name: configure permissions for to 640
+  ansible.builtin.copy:
+    dest: /etc/tmpfiles.d/cis_rule_4_2_3_fix.conf
+    content: |
+      f /var/log/wtmp 0640 root utmp -
+      f /var/log/btmp 0640 root utmp -
+      f /var/log/lastlog 0640 root utmp -
+    mode: 0644
+    owner: root
+    group: root
+
+- name: add root bin directory (path integrity)
+  ansible.builtin.file:
+    path: /root/bin
+    state: directory
+
+- name: ensure prelink is not installed
+  ansible.builtin.yum:
+    name: prelink
+    state: absent

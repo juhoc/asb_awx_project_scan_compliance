@@ -1,0 +1,19 @@
+---
+# Exclude rules nova-compute
+
+rules_nova_cis:
+  rule_3_1_1:
+    description: 3.1.1 - Ensure IP forwarding is disabled
+    enabled: false
+
+  rule_3_3_1:
+    description: 3.3.1 - Ensure IPv6 router advertisements are not accepted
+    enabled: false
+
+  rule_3_3_2:
+    description: 3.3.2 - Ensure IPv6 redirects are not accepted
+    enabled: false
+
+  rule_3_3_3:
+    description: 3.3.3 - Ensure IPv6 is disabled
+    enabled: false

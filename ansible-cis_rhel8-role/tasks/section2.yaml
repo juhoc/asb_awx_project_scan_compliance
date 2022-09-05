@@ -1,0 +1,376 @@
+---
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: xinetd
+    state: absent
+  when:
+    - rules.rule_2_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_1_1.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_2_2_1_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_1_2.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_2_2_1_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_1_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_2.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: xorg-x11*
+    state: absent
+  when:
+    - rules.rule_2_2_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_3.description }}'
+  register: _output_rule
+  ansible.builtin.shell: /bin/true
+  when:
+    - rules.rule_2_2_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_3
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_4.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: avahi-daemon
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_4.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_4
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_5.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: snmpd
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_5.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_5
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_6.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: squid
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_6.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_6
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_7.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: smb
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_7.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_7
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_8.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: dovecot
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_8.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_8
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_9.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: httpd
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_9.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_9
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_10.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: vsftpd
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_10.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_10
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_11.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: named
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_11.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_11
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_12.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: nfs
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_12.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_12
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_13.description }}'
+  register: _output_rule
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+    masked: no
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  loop:
+    - rpcbind.service
+    - rpcbind.socket
+  when:
+    - rules.rule_2_2_13.enabled
+    - ansible_local.physics.product is defined
+    - ansible_local.physics.product != 'nova-compute'
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_13
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_14.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: slapd
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_14.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_14
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_15.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: dhcpd
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_15.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_15
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_16.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: cups
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_16.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_16
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_17.description }}'
+  register: _output_rule
+  ansible.builtin.service:
+    name: ypserv
+    state: stopped
+    enabled: false
+  failed_when: _output_rule.failed and "Could not find the requested service" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_17.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_17
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_2_18.description }}'
+  register: _output_rule
+  ansible.builtin.lineinfile:
+    dest: /etc/postfix/main.cf
+    regexp: "^(#)?inet_interfaces"
+    line: "inet_interfaces = localhost"
+  failed_when: _output_rule.failed and "does not exist" not in _output_rule.msg
+  when:
+    - rules.rule_2_2_18.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_2_18
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_3_1.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: ypbind
+    state: absent
+  when:
+    - rules.rule_2_3_1.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_1
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_3_2.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: telnet
+    state: absent
+  when:
+    - rules.rule_2_3_2.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_2
+    _current_rule_output: '{{ _output_rule }}'
+
+- ignore_errors: 'true'
+  name: '{{ rules.rule_2_3_3.description }}'
+  register: _output_rule
+  ansible.builtin.yum:
+    name: openldap-clients
+    state: absent
+  when:
+    - rules.rule_2_3_3.enabled
+
+- name: update_report.yaml
+  ansible.builtin.include: update_report.yaml
+  vars:
+    _current_rule: rule_2_3_3
+    _current_rule_output: '{{ _output_rule }}'
+

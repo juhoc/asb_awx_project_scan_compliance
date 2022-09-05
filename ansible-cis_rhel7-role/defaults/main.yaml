@@ -1,0 +1,3015 @@
+---
+###### IES REVISION 25/03/2020 ######
+
+# defaults file for ansible-CISHardening-role
+
+rhel7_sshd_config:
+  X11Forwarding: "no"
+  ClientAliveInterval: 900
+  ClientAliveCountMax: 0
+  IgnoreRhosts: "yes"
+  HostbasedAuthentication: "no"
+  PermitRootLogin: "no"
+  PermitEmptyPasswords: "no"
+  PasswordAuthentication: "no"
+  PermitUserEnvironment: "no"
+  Ciphers: 'aes128-ctr,aes192-ctr,aes256-ctr'
+
+
+rhel7cis_sshd:
+  clientalivecountmax: 0 # Estos valores se encuentran igual que el hardening, revisar proximo q
+  clientaliveinterval: 1800 # Estos valores se encuentran igual que el hardening, revisar proximo q
+  # - make sure you understand the precedence when working with these values!!
+  #allowusers:
+  #allowgroups: systems dba
+  #denyusers:
+  #denygroups:
+
+
+# defaults file for RHEL7-CIS
+rhel7cis_skip_for_travis: false
+
+rhel7cis_selinux_disable: false
+
+
+
+# Service configuration booleans set true to keep service
+# TODO DEBERIA DE ELIMINARSE Y DEJARLO QUE SE INDIQUE SOLO EN ENABLE
+rhel7cis_avahi_server: false
+rhel7cis_cups_server: false
+rhel7cis_dhcp_server: false
+rhel7cis_ldap_server: false
+rhel7cis_telnet_server: false
+rhel7cis_nfs_server: false
+rhel7cis_rpc_server: false
+rhel7cis_ntalk_server: false
+rhel7cis_rsyncd_server: false
+rhel7cis_tftp_server: false
+rhel7cis_rsh_server: false
+rhel7cis_nis_server: false
+rhel7cis_snmp_server: false
+rhel7cis_squid_server: false
+rhel7cis_smb_server: false
+rhel7cis_dovecot_server: false
+rhel7cis_httpd_server: false
+rhel7cis_vsftpd_server: false
+rhel7cis_named_server: false
+rhel7cis_nfs_rpc_server: false
+rhel7cis_is_mail_server: false
+rhel7cis_bind: false
+rhel7cis_vsftpd: false
+rhel7cis_httpd: false
+rhel7cis_dovecot: false
+rhel7cis_samba: false
+rhel7cis_squid: false
+rhel7cis_net_snmp: false
+rhel7cis_allow_autofs: false
+
+# xinetd required
+rhel7cis_xinetd_required: false
+
+# RedHat Satellite Subscription items
+rhel7cis_rhnsd_required: false
+
+# 1.4.2 Bootloader password
+rhel7cis_bootloader_password: random
+
+# System network parameters (host only OR host and router)
+rhel7cis_is_router: false
+
+# IPv6 required
+rhel7cis_ipv6_required: false
+
+# AIDE
+rhel7cis_config_aide: true
+# AIDE cron settings
+rhel7cis_aide_cron:
+  cron_user: root
+  cron_file: /etc/crontab
+  aide_job: '/usr/sbin/aide --check'
+  aide_minute: 0
+  aide_hour: 5
+  aide_day: '*'
+  aide_month: '*'
+  aide_weekday: '*'
+
+# SELinux policy
+rhel7cis_selinux_pol: targeted
+
+# Set to 'true' if X Windows is needed in your environment
+rhel7cis_xwindows_required: no
+
+rhel7cis_openldap_clients_required: false
+rhel7cis_telnet_required: false
+rhel7cis_talk_required: false
+rhel7cis_rsh_required: false
+rhel7cis_ypbind_required: false
+
+# Time Synchronization
+rhel7cis_time_synchronization: chrony
+#rhel7cis_time_synchronization: ntp
+
+rhel7cis_time_synchronization_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+# 3.4.2 | PATCH | Ensure /etc/hosts.allow is configured
+rhel7cis_host_allow:
+  - "10.0.0.0/255.0.0.0"
+  - "172.16.0.0/255.240.0.0"
+  - "192.168.0.0/255.255.0.0"
+
+rhel7cis_rsyslog_enabled: false
+
+rhel7cis_firewall_enabled: false
+rhel7cis_firewall: disabled
+#rhel7cis_firewall: iptables
+
+rhel7cis_firewall_services:
+  - ssh
+  - dhcpv6-client
+
+# Warning Banner Content (issue, issue.net, motd)
+rhel7cis_warning_banner: | # Estos valores se encuentran igual que el hardening, revisar proximo q
+  *****************************************************
+
+  ### #######  #####
+   #  #       #     #
+   #  #       #
+   #  #####    #####
+   #  #             #
+   #  #       #     #
+  ### #######  #####
+  *****************************************************
+
+  UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED
+
+  You must have explicit, authorized permission to access or configure this device.
+  Unauthorized attempts and actions to access or use this system may result in civil and/or criminal penalties.
+  All activities performed on this device are logged and monitored.
+# End Banner
+
+
+# Syslog system
+rhel7cis_syslog: rsyslog
+#rhel7cis_syslog: syslog-ng
+
+rhel7cis_vartmp:
+  source: /tmp
+  fstype: none
+  opts: "defaults, nodev, nosuid, noexec, bind"
+  enabled: no
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rules_cis:
+  # 1 - Initial Setup
+  rule_1_1_1_1:
+    description: 1.1.1.1 - Ensure mounting of cramfs filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v cramfs | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c cramfs
+        expected: "0"
+
+  rule_1_1_1_2:
+    description: 1.1.1.2 - Ensure mounting of freevxfs filesystems is disabled
+    enabled: true
+    scored: false
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v freevxfs | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c freevxfs
+        expected: "0"
+
+  rule_1_1_1_3:
+    description: 1.1.1.3 - Ensure mounting of jffs2 filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v jffs2 | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c jffs2
+        expected: "0"
+
+  rule_1_1_1_4:
+    description: 1.1.1.4 - Ensure mounting of hfs filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v hfs | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c hfs
+        expected: "0"
+
+  rule_1_1_1_5:
+    description: 1.1.1.5 - Ensure mounting of hfsplus filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v hfsplus | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c hfsplus
+        expected: "0"
+
+  rule_1_1_1_6:
+    description: 1.1.1.6 - Ensure mounting of squashfs filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v squashfs | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c squashfs
+        expected: "0"
+
+  rule_1_1_1_7:
+    description: 1.1.1.7 - Ensure mounting of udf filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v udf | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c udf
+        expected: "0"
+
+  rule_1_1_1_8:
+    description: 1.1.1.8 - Ensure mounting of FAT filesystems is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: modprobe -n -v vfat | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c vfat
+        expected: "0"
+
+  rule_1_1_2:
+    description: 1.1.2 - Ensure separate partition exists for /tmp | enable and start/restart tmp.mount
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount| grep -c ' /tmp '
+        expected: "1"
+
+  rule_1_1_3:
+    description: 1.1.3 - Ensure nodev option set on /tmp partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /tmp ' | grep -c nodev
+        expected: "1"
+
+  rule_1_1_4:
+    description: 1.1.4 - Ensure nosuid option set on /tmp partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /tmp ' | grep -c nosuid
+        expected: "1"
+
+  rule_1_1_5:
+    description: 1.1.5 - Ensure noexec option set on /tmp partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /tmp ' | grep -c noexec
+        expected: "1"
+
+  rule_1_1_6:
+    description: 1.1.6 - Ensure separate partition exists for /var
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: mount | grep -c ' /var '
+        expected: "1"
+
+  rule_1_1_7:
+    description: 1.1.7 - Ensure separate partition exists for /var/tmp
+    enabled: false
+    observations: "does not apply, on-premise images have no separate partition"
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: mount | grep -c ' /var/tmp '
+        expected: "1"
+
+  rule_1_1_8:
+    description: 1.1.8 - Ensure nodev option set on /var/tmp partition
+    enabled: false
+    observations: "does not apply, on-premise images have no separate partition"
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /var/tmp ' | grep -c nodev
+        expected: "1"
+
+  rule_1_1_9:
+    description: 1.1.9 - Ensure nosuid option set on /var/tmp partition
+    enabled: false
+    observations: "does not apply, on-premise images have no separate partition"
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /var/tmp ' | grep -c nosuid
+        expected: "1"
+
+  rule_1_1_10:
+    description: 1.1.10 - Ensure noexec option set on /var/tmp partition
+    enabled: false
+    observations: "does not apply, on-premise images have no separate partition"
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /var/tmp ' | grep -c noexec
+        expected: "1"
+
+  rule_1_1_11:
+    description: 1.1.11 - Ensure separate partition exists for /var/log
+    enabled: false
+    observations: "does not apply, on-premise images have no separate partition"
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep -c ' /var/log '
+        expected: "1"
+
+  rule_1_1_12:
+    description: 1.1.12 - Ensure separate partition exists for /var/log/audit
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: mount | grep -c ' /var/log/audit '
+        expected: "1"
+
+  rule_1_1_13:
+    description: 1.1.13 - Ensure separate partition exists for /home
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: mount | grep -c ' /home '
+        expected: "1"
+
+  rule_1_1_14:
+    description: 1.1.14 - Ensure nodev option set on /home partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /home ' | grep -c nodev
+        expected: "1"
+
+  rule_1_1_15:
+    description: 1.1.15 - Ensure nodev option set on /dev/shm partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /dev/shm ' | grep -c nodev
+        expected: "1"
+
+  rule_1_1_16:
+    description: 1.1.16 - Ensure nosuid option set on /dev/shm partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount | grep ' /dev/shm ' | grep -c nosuid
+        expected: "1"
+
+  rule_1_1_17:
+    description: 1.1.17 - Ensure noexec option set on /dev/shm partition
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: mount| grep ' /dev/shm '| grep -c noexec
+        expected: "1"
+
+  rule_1_1_18:
+    description: 1.1.18 - Ensure nodev option set on removable media partitions
+    enabled: false
+    observations: "does not apply, removable drive are not permitted"
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+
+  rule_1_1_19:
+    description: 1.1.19 - Ensure nosuid option set on removable media partitions
+    enabled: false
+    observations: "does not apply, removable drive are not permitted"
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+
+  rule_1_1_20:
+    description: 1.1.20 - Ensure noexec option set on removable media partitions
+    enabled: false
+    observations: "does not apply, removable drive are not permitted"
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+
+  rule_1_1_21:
+    description: 1.1.21 - Ensure sticky bit is set on all world-writable directories
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: df --local -P | awk {'if (NR!=1) print '} | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null | wc -l
+        expected: "0"
+
+  rule_1_1_22:
+    description: 1.1.22 - Disable Automounting
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled autofs 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_1_2_1:
+    description: 1.2.1 - Ensure package manager repositories are configured
+    enabled: false
+    observations: "it's not mandatory to subscribe the system to RHN"
+    scored: false
+    severity: low
+    status: ''
+    check:
+      - command: echo 0
+        expected: "0"
+
+  rule_1_2_2:
+    description: 1.2.2 - Ensure gpgcheck is globally activated
+    enabled: false
+    scored: false
+    severity: low
+    status: ''
+    check:
+      - command: grep ^gpgcheck /etc/yum.conf | grep -c "gpgcheck=\s*1$"
+        expected: "0"
+      - command: '[ $(yum repolist | grep -c "repolist: 0") -eq 1 ] && { echo 1; } || { grep ^gpgcheck /etc/yum.repos.d/* | grep -c "gpgcheck=\s*1$"; }'
+        expected: "0"
+
+  rule_1_2_3:
+    description: 1.2.3 - Ensure GPG keys are configured
+    enabled: false
+    scored: false
+    severity: critical
+    status: ''
+    check:
+      - command: echo 0
+        expected: "0"
+
+  rule_1_2_4:
+    description: 1.2.4 - Ensure Red Hat Subscription Manager connection is configured
+    enabled: false
+    observations: "not manageable with current infrastructure, supported but intentionally disabled"
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: echo 0
+        expected: "0"
+
+  rule_1_2_5:
+    description: 1.2.5 - Disable the rhnsd Daemon
+    enabled: true
+    observations: "it's not mandatory to have configured repos"
+    not_supported: true
+    scored: false
+    severity: low
+    status: ''
+    check:
+      - command: systemctl is-enabled rhnsd 2>/dev/null | grep -c disabled
+        expected: "1"
+      - command: systemctl is-active rhnsd 2>/dev/null | grep -Ec "inactive|unknown" # Si no esta activo me sale unknown no inactive
+        expected: "1"
+
+  rule_1_3_1:
+    description: 1.3.1 - Ensure AIDE is installed
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c aide /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "1"
+        parameter: "-gt"
+
+  rule_1_3_2:
+    description: 1.3.2 - Ensure filesystem integrity is regularly checked
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: '[ $(($(crontab -u root -l 2>/dev/null | grep -c aide) + $(grep -r aide /etc/cron.* /etc/crontab|wc -l))) -gt 0 ] && echo 1 || echo 2'
+        expected: "1"
+
+  rule_1_4_1:
+    description: 1.4.1 - Ensure permissions on bootloader config are configured
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: stat /boot/grub2/grub.cfg | grep -c 'Access:\s*(0600/-rw-------)\s*Uid:.*root.*Gid:.*root)$'
+        expected: "1"
+
+  rule_1_4_2:
+    description: 1.4.2 - Ensure bootloader password is set
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c "^GRUB2_PASSWORD" /boot/grub2/grub.cfg
+        expected: "0"
+
+  rule_1_4_3:
+    description: 1.4.3 - Ensure authentication required for single user mode
+    enabled: false
+    observations: ""
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep /sbin/sulogin /usr/lib/systemd/system/rescue.service | grep -c 'ExecStart'
+        expected: "1"
+      - command: grep /sbin/sulogin /usr/lib/systemd/system/emergency.service | grep -c 'ExecStart'
+        expected: "1"
+
+  rule_1_5_1:
+    description: 1.5.1 - Ensure core dumps are restricted
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep -c "hard\s*core" /etc/security/limits.conf /etc/security/limits.d/* | wc -l
+        expected: "0"
+        parameter: "-gt"
+      - command: sysctl fs.suid_dumpable | grep -c 'fs.suid_dumpable\s*=\s*0'
+        expected: "0"
+        parameter: "-gt"
+
+  rule_1_5_2:
+    description: 1.5.2 - Ensure XD/NX support is enabled
+    enabled: false
+    observations: password on bootloader is not configured by default
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: echo 0
+        expected: "0"
+
+  rule_1_5_3:
+    description: 1.5.3 - Ensure address space layout randomization (ASLR) is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl kernel.randomize_va_space| grep -c 'kernel.randomize_va_space\s*=\s*2'
+        expected: "1"
+      - command: grep "kernel.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/* | wc -l
+        expected: "2"
+
+  rule_1_5_4:
+    description: 1.5.4 Ensure prelink is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c 'prelink' /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_1_6_1_1:
+    description: 1.6.1.1 - Ensure SELinux is not disabled in bootloader configuration
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^\s*linux" /boot/grub2/grub.cfg | grep -cE "(selinux=0|enforcing=0)"
+        expected: "0"
+
+  rule_1_6_1_2:
+    description: 1.6.1.2 - Ensure the SELinux state is enforcing
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c SELINUX=enforcing /etc/selinux/config
+        expected: "1"
+      - command: getenforce | grep -c Enforcing
+        expected: "1"
+
+  rule_1_6_1_3:
+    description: 1.6.1.3 - Ensure SELinux policy is configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c SELINUXTYPE=targeted /etc/selinux/config
+        expected: "1"
+      - command: sestatus | grep -c targeted
+        expected: "1"
+
+  rule_1_6_1_4:
+    description: 1.6.1.4 - Ensure SETroubleshoot is not installed
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c setroubleshoot /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_1_6_1_5:
+    description: 1.6.1.5 - Ensure the MCS Translation Service (mcstrans) is not installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c mcstrans /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_1_6_1_6:
+    description: 1.6.1.6 - Ensure no unconfined daemons exist
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: ps -eZ | grep -E "initrc" | grep -E -v -w "tr|ps|grep|bash|awk" | tr ':' ' ' | awk '{ print $NF }' | wc -l
+        expected: "0"
+
+  rule_1_6_2:
+    description: 1.6.2 - Ensure SELinux is installed
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c libselinux /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+        parameter: "-gt"
+
+  rule_1_7_1_1:
+    description: 1.7.1.1 - Ensure message of the day is configured properly
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -Eic "(\\\v|\\\r|\\\m|\\\s)" /etc/motd
+        expected: "0"
+
+  rule_1_7_1_2:
+    description: 1.7.1.2 - Ensure local login warning banner is configured properly
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep -Eic "(\\\v|\\\r|\\\m|\\\s)" /etc/issue
+        expected: "0"
+
+  rule_1_7_1_3:
+    description: 1.7.1.3 - Ensure remote login warning banner is configured properly
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep -Eic "(\\\v|\\\r|\\\m|\\\s)" /etc/issue.net
+        expected: "0"
+
+  rule_1_7_1_4:
+    description: 1.7.1.4 - Ensure permissions on /etc/motd are configured
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: stat /etc/motd | grep -c 'Access:\s*(0644/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$'
+        expected: "1"
+
+  rule_1_7_1_5:
+    description: 1.7.1.5 - Ensure permissions on /etc/issue are configured
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: stat /etc/issue| grep -c 'Access:\s*(0644/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$'
+        expected: "1"
+
+  rule_1_7_1_6:
+    description: 1.7.1.6 - Ensure permissions on /etc/issue.net are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/issue.net| grep -c 'Access:\s*(0644/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$'
+        expected: "1"
+
+  rule_1_7_2:
+    description: 1.7.2 - Ensure GDM login banner is configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c "user-db:user" /etc/dconf/profile/gdm
+        expected: "1"
+      - command: grep -c "system-db:gdm" /etc/dconf/profile/gdm
+        expected: "1"
+      - command: grep -c "file-db:/usr/share/gdm/greeter-dconf-defaults" /etc/dconf/profile/gdm
+        expected: "1"
+      - command: grep -c "[org/gnome/login-screen]" /etc/dconf/db/gdm.d/01-banner-message
+        expected: "1"
+      - command: grep -c "banner-message-enable=true" /etc/dconf/db/gdm.d/01-banner-message
+        expected: "1"
+      - command: grep -c "banner-message-text='{{ rhel7cis_warning_banner }}'" /etc/dconf/db/gdm.d/01-banner-message
+        expected: "1"
+
+  rule_1_8:
+    description: 1.8 - Ensure updates, patches, and additional security software are installed
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: yum check-update -q --security 2>/dev/null | grep -Evc "^Repository |^Loaded plugins:"
+        expected: "0"
+
+
+  # 2 - Services
+  rule_2_1_1:
+    description: 2.1.1 - Ensure chargen services are not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: chkconfig --list 2>/dev/null | grep -cE "chargen-dgram:\s*on|chargen-stream:\s*on"
+        expected: "0"
+
+  rule_2_1_2:
+    description: 2.1.2 - Ensure daytime services are not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: chkconfig --list 2>/dev/null | grep -cE "daytime-dgram:\s*on|daytime-stream:\s*on"
+        expected: "0"
+
+  rule_2_1_3:
+    description: 2.1.3 - Ensure discard services are not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: chkconfig --list 2>/dev/null | grep -cE "discard-dgram:\s*on|discard-stream:\s*on"
+        expected: "0"
+
+  rule_2_1_4:
+    description: 2.1.4 - Ensure echo services are not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: chkconfig --list 2>/dev/null | grep -cE "echo-dgram:\s*on|echo-stream:\s*on"
+        expected: "0"
+
+  rule_2_1_5:
+    description: 2.1.5 - Ensure time services are not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: chkconfig --list 2>/dev/null | grep -cE "time-dgram:\s*on|time-stream:\s*on"
+        expected: "0"
+
+  rule_2_1_6:
+    description: 2.1.6 - Ensure tftp server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: chkconfig --list 2>/dev/null | grep -cE "tftp:\s*on"
+        expected: "0"
+
+  rule_2_1_7:
+    description: 2.1.7 - Ensure xinetd is not enabled
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled xinetd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_1_1:
+    description: 2.2.1.1 - Ensure time synchronization is in use
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -cE "^ntp|^chrony" /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+        parameter: '-gt'
+
+  rule_2_2_1_2:
+    description: 2.2.1.2 - Ensure ntp is configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      # Si se habilita esta regla hay que de poerla igual que el resto de relas con rpm para que establezca la variable skip_rpm
+      - command: '[ $(grep -cE ntp /tmp/rpm_packages) -eq 0 ] && { echo 1; } || { grep -c "^restrict -4 default kod nomodify notrap nopeer noquery" /etc/ntp.conf; }'
+        expected: "0"
+      - command: '[ $(grep -cE ntp/tmp/rpm_packages) -eq 0 ] && { echo 1; } || { grep -c "^restrict -6 default kod nomodify notrap nopeer noquery" /etc/ntp.conf; }'
+        expected: "0"
+      - command: '[ $(grep -cE ntp /tmp/rpm_packages) -eq 0 ] && { echo 1; } || { grep -Ec "^(server|pool)" /etc/ntp.conf; }'
+        expected: "0"
+      - command: '[ $(grep -cE ntp /tmp/rpm_packages) -eq 0 ] && { echo 1; } || { grep -c "\-u ntp:ntp" /usr/lib/systemd/system/ntpd.service /etc/sysconfig/ntpd; }'
+        expected: "0"
+
+  rule_2_2_1_3:
+    description: 2.2.1.3 Ensure chrony is configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: '[ $(grep -cE chrony /tmp/rpm_packages) -eq 0 ] && { echo 1; } || { grep -Ec "^(server|pool)" /etc/chrony.conf; }'
+        expected: "0"
+      - command: '[ $(grep -cE chrony /tmp/rpm_packages) -eq 0 ] && { echo 1; } || { grep ^OPTIONS /etc/sysconfig/chronyd|grep -c "\-u chrony"; }'
+        expected: "0"
+
+  rule_2_2_2:
+    description: 2.2.2 - Ensure X Window System is not installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep "xorg-x11" /tmp/rpm_packages | grep -vc xorg-x11-font; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_2_2_3:
+    description: 2.2.3 - Ensure Avahi Server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled avahi-daemon 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_4:
+    description: 2.2.4 - Ensure CUPS is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled cups 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_5:
+    description: 2.2.5 - Ensure DHCP Server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled dhcpd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_6:
+    description: 2.2.6 - Ensure LDAP server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled slapd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_7:
+    description: 2.2.7 - Ensure NFS and RPC are not enabled
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled nfs 2>/dev/null | grep -c enabled
+        expected: "0"
+      - command: systemctl is-enabled nfs-server 2>/dev/null | grep -c enabled
+        expected: "0"
+      - command: systemctl is-enabled rpcbind 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_8:
+    description: 2.2.8 - Ensure DNS Server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled named 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_9:
+    description: 2.2.9 - Ensure FTP Server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled vsftpd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_10:
+    description: 2.2.10 - Ensure HTTP server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled httpd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_11:
+    description: 2.2.11 - Ensure IMAP and POP3 server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled dovecot 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_12:
+    description: 2.2.12 - Ensure Samba is not enabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: systemctl is-enabled smb 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_13:
+    description: 2.2.13 - Ensure HTTP Proxy Server is not enabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: systemctl is-enabled squid 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_14:
+    description: 2.2.14 - Ensure SNMP Server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled snmpd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_15:
+    description: 2.2.15 - Ensure mail transfer agent is configured for local-only mode
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: ss -lntu | grep -E ':25\s' | grep -Evc '\s(127.0.0.1|\[::1\]):25\s'
+        expected: "0"
+
+  rule_2_2_16:
+    description: 2.2.16 - Ensure NIS Server is not enabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: systemctl is-enabled ypserv 2>/dev/null | grep -c enabled
+        expected: '0'
+
+  rule_2_2_17:
+    description: 2.2.17 - Ensure rsh server is not enabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: systemctl is-enabled rsh.socket 2>/dev/null | grep -c enabled
+        expected: "0"
+      - command: systemctl is-enabled rlogin.socket 2>/dev/null | grep -c enabled
+        expected: "0"
+      - command: systemctl is-enabled rexec.socket 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_18:
+    description: 2.2.18 - Ensure talk server is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled ntalk 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_19:
+    description: 2.2.19 - Ensure telnet server is not enabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: systemctl is-enabled telnet.socket 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_20:
+    description: 2.2.20 - Ensure tftp server is not enabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: systemctl is-enabled tftp.socket 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_2_21:
+    description: 2.2.21 - Ensure rsync service is not enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled rsyncd 2>/dev/null | grep -c enabled
+        expected: "0"
+
+  rule_2_3_1:
+    description: 2.3.1 - Ensure NIS Client is not installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c ypbind /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_2_3_2:
+    description: 2.3.2 - Ensure rsh client is not installed
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c rsh /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_2_3_3:
+    description: 2.3.3 - Ensure talk client is not installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c talk /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_2_3_4:
+    description: 2.3.4 - Ensure telnet client is not installed
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c telnet /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+  rule_2_3_5:
+    description: 2.3.5 Ensure LDAP client is not installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c openldap-clients /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+
+
+  # Network Configuration
+  rule_3_1_1:
+    description: 3.1.1 - Ensure IP forwarding is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.ip_forward | grep -Ec '^net.ipv4.ip_forward\s*=\s*0'
+        expected: "1"
+      - command: grep "net.ipv4.ip_forward" /etc/sysctl.conf /etc/sysctl.d/* | grep -Ec "net.ipv4.ip_forward\s*=\s*0"
+        expected: "2"
+
+  rule_3_1_2:
+    description: 3.1.2 - Ensure packet redirect sending is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.conf.all.send_redirects | grep -cE '^net.ipv4.conf.all.send_redirects\s*=\s*0'
+        expected: "1"
+      - command: sysctl net.ipv4.conf.default.send_redirects | grep -cE '^net.ipv4.conf.default.send_redirects\s*=\s*0'
+        expected: "1"
+
+  rule_3_2_1:
+    description: 3.2.1 - Ensure source routed packets are not accepted
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.conf.all.accept_source_route | grep -cE '^net.ipv4.conf.all.accept_source_route\s*=\s*0'
+        expected: "1"
+      - command: sysctl net.ipv4.conf.default.accept_source_route | grep -cE '^net.ipv4.conf.default.accept_source_route\s*=\s*0'
+        expected: "1"
+
+  rule_3_2_2:
+    description: 3.2.2 - Ensure ICMP redirects are not accepted
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.conf.all.accept_redirects | grep -Ec '^net.ipv4.conf.all.accept_redirects\s*=\s*0'
+        expected: "1"
+      - command: sysctl net.ipv4.conf.default.accept_redirects | grep -Ec '^net.ipv4.conf.default.accept_redirects\s*=\s*0'
+        expected: "1"
+
+  rule_3_2_3:
+    description: 3.2.3 - Ensure secure ICMP redirects are not accepted
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.conf.all.secure_redirects | grep -Ec '^net.ipv4.conf.all.secure_redirects\s*=\s*0'
+        expected: "1"
+      - command: sysctl net.ipv4.conf.default.secure_redirects | grep -Ec '^net.ipv4.conf.default.secure_redirects\s*=\s*0'
+        expected: "1"
+
+  rule_3_2_4:
+    description: 3.2.4 - Ensure suspicious packets are logged
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.conf.all.log_martians | grep -Ec '^net.ipv4.conf.all.log_martians\s*=\s*1'
+        expected: "1"
+      - command: sysctl net.ipv4.conf.default.log_martians | grep -Ec '^net.ipv4.conf.default.log_martians\s*=\s*1'
+        expected: "1"
+
+  rule_3_2_5:
+    description: 3.2.5 - Ensure broadcast ICMP requests are ignored
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.icmp_echo_ignore_broadcasts | grep -Ec '^net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1'
+        expected: "1"
+      - command: grep "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d/*| grep -Ec "net.ipv4.icmp_echo_ignore_broadcasts\s*=\s*1"
+        expected: "2"
+
+  rule_3_2_6:
+    description: 3.2.6 - Ensure bogus ICMP responses are ignored
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.icmp_ignore_bogus_error_responses | grep -Ec '^net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1'
+        expected: "1"
+      - command: grep "net\.ipv4\.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d/* | egrep -c "net.ipv4.icmp_ignore_bogus_error_responses\s*=\s*1"
+        expected: "2"
+
+  rule_3_2_7:
+    description: 3.2.7 - Ensure Reverse Path Filtering is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.conf.all.rp_filter | grep -Ec '^net.ipv4.conf.all.rp_filter\s*=\s*1'
+        expected: "1"
+      - command: sysctl net.ipv4.conf.default.rp_filter | grep -Ec '^net.ipv4.conf.default.rp_filter\s*=\s*1'
+        expected: "1"
+
+  rule_3_2_8:
+    description: 3.2.8 - Ensure TCP SYN Cookies is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv4.tcp_syncookies | grep -Ec '^net.ipv4.tcp_syncookies\s*=\s*1'
+        expected: "1"
+      - command: grep "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d/*| egrep -c "net.ipv4.tcp_syncookies\s*=\s*1"
+        expected: "2"
+
+  rule_3_3_1:
+    description: 3.3.1 - Ensure IPv6 router advertisements are not accepted
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv6.conf.all.accept_ra | grep -Ec '^net.ipv6.conf.all.accept_ra\s*=\s*0'
+        expected: "1"
+      - command: sysctl net.ipv6.conf.default.accept_ra | grep -Ec '^net.ipv6.conf.default.accept_ra\s*=\s*0'
+        expected: "1"
+      - command: grep "net\.ipv6\.conf\.all\.accept_ra" /etc/sysctl.conf /etc/sysctl.d/* | grep -Ec "net.ipv6.conf.all.accept_ra\s*=\s*0"
+        expected: "2"
+      - command: grep "net\.ipv6\.conf\.default\.accept_ra" /etc/sysctl.conf /etc/sysctl.d/* | grep -Ec "net.ipv6.conf.all.accept_ra\s*=\s*0"
+        expected: "2"
+
+  rule_3_3_2:
+    description: 3.3.2 - Ensure IPv6 redirects are not accepted
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: sysctl net.ipv6.conf.all.accept_redirects | grep -c "net.ipv6.conf.all.accept_redirect = 0"
+        expected: "0"
+      - command: sysctl net.ipv6.conf.default.accept_redirects | grep -c  "net.ipv6.conf.default.accept_redirect = 0"
+        expected: "0"
+      - command: grep "net\.ipv6\.conf\.all\.accept_redirect" /etc/sysctl.conf /etc/sysctl.d/* | egrep -c "net.ipv6.conf.all.accept_redirect\s*=\s*0"
+        expected: "0"
+      - command: grep "net\.ipv6\.conf\.default\.accept_redirect" /etc/sysctl.conf /etc/sysctl.d/* | egrep -c "net.ipv6.conf.default.accept_redirect = 0"
+        expected: "0"
+
+  rule_3_3_3:
+    description: 3.3.3 - Ensure IPv6 is disabled
+    enabled: true
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: grep "^\s*linux" /boot/grub2/grub.cfg | grep -cv 'ipv6.disabled=1'
+        expected: "0"
+        parameter: '-gt'
+
+  rule_3_4_1:
+    description: 3.4.1 - Ensure TCP Wrappers is installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c tcp_wrappers /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+        parameter: '-gt'
+
+  rule_3_4_2:
+    description: 3.4.2 - Ensure /etc/hosts.allow is configured
+    enabled: false
+    observations: ""
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: cat /etc/hosts.allow | grep -c ^ALL
+        expected: "0"
+
+  rule_3_4_3:
+    description: 3.4.3 - Ensure /etc/hosts.deny is configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: cat /etc/hosts.deny | grep -Ec "ALL:\s*ALL"
+        expected: "0"
+
+  rule_3_4_4:
+    description: 3.4.4 - Ensure permissions on /etc/hosts.allow are configured
+    enabled: true
+    observations: ""
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/hosts.allow | grep -c "Access:\s*(0644/-rw-r--r--).*Uid.*root.*Gid.*root"
+        expected: "1"
+
+  rule_3_4_5:
+    description: 3.4.5 - Ensure permissions on /etc/hosts.deny are configured
+    enabled: true
+    observations: ""
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/hosts.deny | grep -c "Access:\s*(0644/-rw-r--r--).*Uid.*root.*Gid.*root"
+        expected: "1"
+
+  rule_3_5_1:
+    description: 3.5.1 - Ensure DCCP is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: modprobe -n -v dccp | egrep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c dccp
+        expected: "0"
+
+  rule_3_5_2:
+    description: 3.5.2 - Ensure SCTP is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: modprobe -n -v sctp | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c sctp
+        expected: "0"
+
+  rule_3_5_3:
+    description: 3.5.3 - Ensure RDS is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: modprobe -n -v rds | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c rds
+        expected: "0"
+
+  rule_3_5_4:
+    description: 3.5.4 - Ensure TIPC is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: modprobe -n -v tipc | grep -Ec "^install\s*/bin/true($|\s*)"
+        expected: "1"
+      - command: lsmod | grep -c tipc
+        expected: "0"
+
+  rule_3_6:
+    description: 3.6 - Ensure firewalld is installed and started | CUSTOM
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c 'firewalld' /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+        parameter: '-gt'
+
+  rule_3_6_1:
+    description: 3.6.1 - Ensure iptables is installed and started
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c 'iptables' /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+        parameter: '-gt'
+
+  rule_3_6_2:
+    description: 3.6.2 - Ensure default deny firewall policy
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: iptables -L | grep INPUT | grep -Ec "DROP|REJECT"
+        expected: "0"
+      - command: iptables -L | grep FORWARD | grep -Ec "DROP|REJECT"
+        expected: "0"
+      - command: iptables -L | grep OUTPUT | grep -Ec "DROP|REJECT"
+        expected: "0"
+
+  rule_3_6_3:
+    description: 3.6.3 - Ensure loopback traffic is configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: iptables -L INPUT -v -n | grep -c ".*ACCEPT\s*all.*lo.*0.0.0.0/0\s*0.0.0.0/0"
+        expected: "0"
+      - command: iptables -L INPUT -v -n | grep -c ".*DROP\s*all.*127.0.0.0/8\s*0.0.0.0/0"
+        expected: "0"
+      - command: iptables -L OUTPUT -v -n | grep -c ".*ACCEPT\s*all.*lo\s*0.0.0.0/0\s*0.0.0.0/0"
+        expected: "0"
+
+  rule_3_6_4:
+    description: 3.6.4 - Ensure outbound and established connections are configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: iptables -L INPUT -v -n | grep -c ".*ACCEPT\s*tcp.*0.0.0.0/0\s*0.0.0.0/0\s*state ESTABLISHED"
+        expected: "1"
+      - command: iptables -L INPUT -v -n | grep -c ".*ACCEPT\s*udp.*0.0.0.0/0\s*0.0.0.0/0\s*state ESTABLISHED"
+        expected: "1"
+      - command: iptables -L INPUT -v -n | grep -c ".*ACCEPT\s*icmp.*0.0.0.0/0\s*0.0.0.0/0\s*state ESTABLISHED"
+        expected: "1"
+      - command: iptables -L OUTPUT -v -n | grep -c ".*ACCEPT\s*tcp.*0.0.0.0/0\s*0.0.0.0/0\s*state NEW,ESTABLISHED"
+        expected: "1"
+      - command: iptables -L OUTPUT -v -n | grep -c ".*ACCEPT\s*udp.*0.0.0.0/0\s*0.0.0.0/0\s*state NEW,ESTABLISHED"
+        expected: "1"
+      - command: iptables -L OUTPUT -v -n | grep -c ".*ACCEPT\s*icmp.*0.0.0.0/0\s*0.0.0.0/0\s*state NEW,ESTABLISHED"
+        expected: "1"
+
+  rule_3_6_5:
+    description: 3.6.5 - Ensure firewall rules exist for all open ports
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: echo 0
+        expected: "0"
+
+  rule_3_7:
+    description: 3.7 - Ensure wireless interfaces are disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: ip link show up | grep -c wlan
+        expected: "0"
+
+
+  # Logging and Auditing
+  rule_4_1_1_1:
+    description: 4.1.1.1 - Ensure audit log storage size is configured
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep -Ec "max_log_file\s*=" /etc/audit/auditd.conf
+        expected: "1"
+
+  rule_4_1_1_2:
+    description: 4.1.1.2 - Ensure system is disabled when audit logs are full
+    enabled: false
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep -c '^space_left_action\s*=\s*EMAIL' /etc/audit/auditd.conf
+        expected: "1"
+      - command: grep -c '^action_mail_acct\s*=\s*root' /etc/audit/auditd.conf
+        expected: "1"
+      - command: grep -c '^admin_space_left_action\s*=\s*ROTATE' /etc/audit/auditd.conf
+        expected: "1"
+
+  rule_4_1_1_3:
+    description: 4.1.1.3 - Ensure audit logs are not automatically deleted
+    enabled: false
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep -c '^max_log_file_action\s*=\s*ROTATE' /etc/audit/auditd.conf
+        expected: "1"
+
+  rule_4_1_2:
+    description: 4.1.2 - Ensure auditd service is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled auditd 2>/dev/null | grep -c enabled
+        expected: "1"
+
+  rule_4_1_3:
+    description: 4.1.3 - Ensure auditing for processes that start prior to auditd is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c "^\s*linux.*audit=1.*" /boot/grub2/grub.cfg
+        expected: "0"
+        parameter: '-gt'
+
+  rule_4_1_4:
+    description: 4.1.4 - Ensure events that modify date and time information are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep time-change /etc/audit/audit.rules|egrep "\-a always,exit -F arch=b32 -S.*" | grep adjtimex | grep settimeofday | grep -c stime
+        expected: "1"
+      - command: grep time-change /etc/audit/audit.rules|egrep "\-a always,exit -F arch=b64 -S.*" | grep adjtimex | grep -c settimeofday
+        expected: "1"
+      - command: grep time-change /etc/audit/audit.rules|egrep "\-a always,exit -F arch=b32 -S.*" | grep -c clock_settime
+        expected: "1"
+      - command: grep time-change /etc/audit/audit.rules|egrep "\-a always,exit -F arch=b64 -S.*" | grep -c clock_settime
+        expected: "1"
+      - command: grep time-change /etc/audit/audit.rules|egrep "\-w /etc/localtime" | wc -l
+        expected: "1"
+      - command: auditctl -l | grep time-change|egrep "\-a always,exit -F arch=b32 -S.*" | grep adjtimex | grep settimeofday | grep -c stime
+        expected: "1"
+      - command: auditctl -l | grep time-change|egrep "\-a always,exit -F arch=b64 -S.*" | grep adjtimex | grep -c settimeofday
+        expected: "1"
+      - command: auditctl -l | grep time-change|egrep "\-a always,exit -F arch=b32 -S.*" | grep -c clock_settime
+        expected: "1"
+      - command: auditctl -l | grep time-change|egrep "\-a always,exit -F arch=b64 -S.*" | grep -c clock_settime
+        expected: "1"
+      - command: auditctl -l | grep time-change|egrep "\-w /etc/localtime"|wc -l
+        expected: "1"
+
+  rule_4_1_5:
+    description: 4.1.5 - Ensure events that modify user/group information are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep identity /etc/audit/audit.rules | grep -c '\-w /etc/group -p wa -k identity'
+        expected: "1"
+      - command: grep identity /etc/audit/audit.rules | grep -c '\-w /etc/passwd -p wa -k identity'
+        expected: "1"
+      - command: grep identity /etc/audit/audit.rules | grep -c '\-w /etc/gshadow -p wa -k identity'
+        expected: "1"
+      - command: grep identity /etc/audit/audit.rules | grep -c '\-w /etc/shadow -p wa -k identity'
+        expected: "1"
+      - command: grep identity /etc/audit/audit.rules | grep -c '\-w /etc/security/opasswd -p wa -k identity'
+        expected: "1"
+      - command: auditctl -l | grep identity | grep -c '\-w /etc/group -p wa -k identity'
+        expected: "1"
+      - command: auditctl -l | grep identity | grep -c '\-w /etc/passwd -p wa -k identity'
+        expected: "1"
+      - command: auditctl -l | grep identity | grep -c '\-w /etc/gshadow -p wa -k identity'
+        expected: "1"
+      - command: auditctl -l | grep identity | grep -c '\-w /etc/shadow -p wa -k identity'
+        expected: "1"
+      - command: auditctl -l | grep identity | grep -c '\-w /etc/security/opasswd -p wa -k identity'
+        expected: "1"
+
+  rule_4_1_6:
+    description: 4.1.6 - Ensure events that modify the system's network environment are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep system-locale /etc/audit/audit.rules | grep '\-a always,exit -F arch=b32' | grep  sethostname | grep -c setdomainname
+        expected: "1"
+      - command: grep system-locale /etc/audit/audit.rules | grep '\-a always,exit -F arch=b64' | grep  sethostname | grep -c setdomainname
+        expected: "1"
+      - command: grep system-locale /etc/audit/audit.rules | grep -c '\-w /etc/issue -p wa'
+        expected: "1"
+      - command: grep system-locale /etc/audit/audit.rules | grep -c '\-w /etc/issue.net -p wa'
+        expected: "1"
+      - command: grep system-locale /etc/audit/audit.rules | grep -c '\-w /etc/hosts -p wa'
+        expected: "1"
+      - command: grep system-locale /etc/audit/audit.rules | grep -c '\-w /etc/sysconfig/network -p wa'
+        expected: "1"
+      - command: grep system-locale /etc/audit/audit.rules | grep -c '\-w /etc/sysconfig/network-scripts/ -p wa'
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep '\-a always,exit -F arch=b32' | grep  sethostname | grep -c setdomainname
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep '\-a always,exit -F arch=b64' | grep  sethostname | grep -c setdomainname
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep -c '\-w /etc/issue -p wa'
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep -c '\-w /etc/issue.net -p wa'
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep -c '\-w /etc/hosts -p wa'
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep -c '\-w /etc/sysconfig/network -p wa'
+        expected: "1"
+      - command: auditctl -l | grep system-locale | grep -c '\-w /etc/sysconfig/network-scripts -p wa'
+        expected: "1"
+
+  rule_4_1_7:
+    description: 4.1.7 - Ensure events that modify the system's Mandatory Access Controls are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep MAC-policy /etc/audit/audit.rules | grep -c "\-w /etc/selinux/ -p wa"
+        expected: "1"
+      - command: grep MAC-policy /etc/audit/audit.rules | grep -c "\-w /usr/share/selinux/ -p wa"
+        expected: "1"
+
+  rule_4_1_8:
+    description: 4.1.8 - Ensure login and logout events are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep logins /etc/audit/audit.rules| grep -c "\-w /var/log/lastlog -p wa"
+        expected: "1"
+      - command: grep logins /etc/audit/audit.rules| grep -c "\-w /var/run/faillock/ -p wa"
+        expected: "1"
+
+  rule_4_1_9:
+    description: 4.1.9 - Ensure session initiation information is collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep session /etc/audit/audit.rules | grep -c "\-w /var/run/utmp -p wa"
+        expected: "1"
+      - command: auditctl -l | grep session | grep -c "\-w /var/run/utmp -p wa"
+        expected: "1"
+      - command: grep logins /etc/audit/audit.rules | grep -c "\-w /var/log/wtmp -p wa"
+        expected: "1"
+      - command: auditctl -l | grep logins | grep -c "\-w /var/log/wtmp -p wa"
+        expected: "1"
+      - command: grep logins /etc/audit/audit.rules | grep -c "\-w /var/log/btmp -p wa"
+        expected: "1"
+      - command: auditctl -l | grep logins | grep -c "\-w /var/log/btmp -p wa"
+        expected: "1"
+
+  rule_4_1_10:
+    description: 4.1.10 - Ensure discretionary access control permission modification events are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep perm_mod /etc/audit/audit.rules | grep "\-a always,exit -F arch=b32" | grep chmod | grep fchmod | grep -c fchmodat
+        expected: "1"
+      - command: grep perm_mod /etc/audit/audit.rules | grep "\-a always,exit -F arch=b64" | grep chmod | grep fchmod | grep -c fchmodat
+        expected: "1"
+      - command: grep perm_mod /etc/audit/audit.rules | grep "\-a always,exit -F arch=b32" | grep chown | grep fchown | grep fchownat | grep -c lchown
+        expected: "1"
+      - command: grep perm_mod /etc/audit/audit.rules | grep "\-a always,exit -F arch=b64" | grep chown | grep fchown | grep fchownat | grep -c lchown
+        expected: "1"
+      - command: grep perm_mod /etc/audit/audit.rules | grep "\-a always,exit -F arch=b32" | grep setxattr | grep lsetxattr | grep fsetxattr | grep removexattr | grep lremovexattr| grep -c fremovexattr
+        expected: "1"
+      - command: grep perm_mod /etc/audit/audit.rules | grep "\-a always,exit -F arch=b64" | grep setxattr | grep lsetxattr | grep fsetxattr | grep removexattr | grep lremovexattr| grep -c fremovexattr
+        expected: "1"
+      - command: auditctl -l | grep perm_mod | grep "\-a always,exit -F arch=b32" | grep chmod | grep fchmod | grep -c fchmodat
+        expected: "1"
+      - command: auditctl -l | grep perm_mod | grep "\-a always,exit -F arch=b64" | grep chmod | grep fchmod | grep -c fchmodat
+        expected: "1"
+      - command: auditctl -l | grep perm_mod | grep "\-a always,exit -F arch=b32" | grep chown | grep fchown | grep fchownat | grep -c lchown
+        expected: "1"
+      - command: auditctl -l | grep perm_mod | grep "\-a always,exit -F arch=b64" | grep chown | grep fchown | grep fchownat | grep -c lchown
+        expected: "1"
+      - command: auditctl -l | grep perm_mod | grep "\-a always,exit -F arch=b32" | grep setxattr | grep lsetxattr | grep fsetxattr | grep removexattr | grep lremovexattr | grep -c fremovexattr
+        expected: "1"
+      - command: auditctl -l | grep perm_mod | grep "\-a always,exit -F arch=b64" | grep setxattr | grep lsetxattr | grep fsetxattr | grep removexattr | grep lremovexattr | grep -c fremovexattr
+        expected: "1"
+
+  rule_4_1_11:
+    description: 4.1.11 - Ensure unsuccessful unauthorized file access attempts are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep access$ /etc/audit/audit.rules| grep "\-a always,exit -F arch=b32"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EACCES|wc -l
+        expected: "1"
+      - command: grep access$ /etc/audit/audit.rules| grep "\-a always,exit -F arch=b64"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EACCES|wc -l
+        expected: "1"
+      - command: grep access$ /etc/audit/audit.rules| grep "\-a always,exit -F arch=b32"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EPERM|wc -l
+        expected: "1"
+      - command: grep access$ /etc/audit/audit.rules| grep "\-a always,exit -F arch=b64"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EPERM|wc -l
+        expected: "1"
+      - command: auditctl -l | grep access$| grep "\-a always,exit -F arch=b32"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EACCES|wc -l
+        expected: "1"
+      - command: auditctl -l | grep access$| grep "\-a always,exit -F arch=b64"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EACCES|wc -l
+        expected: "1"
+      - command: auditctl -l | grep access$| grep "\-a always,exit -F arch=b32"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EPERM|wc -l
+        expected: "1"
+      - command: auditctl -l | grep access$| grep "\-a always,exit -F arch=b64"| grep open|grep creat|grep truncate|grep ftruncate|grep openat|grep open_by_handle_at|grep EPERM|wc -l
+        expected: "1"
+
+  rule_4_1_12:
+    description: 4.1.12 - Ensure use of privileged commands is collected
+    enabled: false
+    observations: "Se verifica en el IES"
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: auditctl -l | grep -c privileged$
+        expected: "0"
+
+  rule_4_1_13:
+    description: 4.1.13 - Ensure successful file system mounts are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep mounts$ /etc/audit/audit.rules | grep -c "\-a always,exit -F arch=b64 -S mount"
+        expected: "1"
+      - command: grep mounts$ /etc/audit/audit.rules | grep -c "\-a always,exit -F arch=b32 -S mount"
+        expected: "1"
+      - command: auditctl -l | grep mounts$ | grep -c "\-a always,exit -F arch=b64 -S mount"
+        expected: "1"
+      - command: auditctl -l | grep mounts$ | grep -c "\-a always,exit -F arch=b32 -S mount"
+        expected: "1"
+
+  rule_4_1_14:
+    description: 4.1.14 - Ensure file deletion events by users are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep delete$ /etc/audit/audit.rules | grep "\-a always,exit -F arch=b32" | grep unlink | grep unlinkat | grep rename | grep renameat | grep -c "\-F auid>=1000"
+        expected: "1"
+      - command: grep delete$ /etc/audit/audit.rules | grep "\-a always,exit -F arch=b64" | grep unlink | grep unlinkat | grep rename | grep renameat | grep -c "\-F auid>=1000"
+        expected: "1"
+      - command: auditctl -l | grep delete$ | grep "\-a always,exit -F arch=b32" | grep unlink | grep unlinkat | grep rename | grep renameat | grep -c "\-F auid>=1000"
+        expected: "1"
+      - command: auditctl -l | grep delete$ | grep "\-a always,exit -F arch=b64" | grep unlink | grep unlinkat | grep rename | grep renameat | grep -c "\-F auid>=1000"
+        expected: "1"
+
+  rule_4_1_15:
+    description: 4.1.15 - Ensure changes to system administration scope (sudoers) is collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep scope$ /etc/audit/audit.rules | grep -c "\-w /etc/sudoers -p wa"
+        expected: "1"
+      - command: grep scope$ /etc/audit/audit.rules | grep -c "\-w /etc/sudoers.d/ -p wa"
+        expected: "1"
+      - command: auditctl -l | grep scope$ | grep -c "\-w /etc/sudoers -p wa"
+        expected: "1"
+      - command: auditctl -l | grep scope$ | grep -c "\-w /etc/sudoers.d -p wa"
+        expected: "1"
+
+  rule_4_1_16:
+    description: 4.1.16 - Ensure system administrator actions (sudolog) are collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep actions$ /etc/audit/audit.rules | grep -c "\-w /var/log/secure -p wa"
+        expected: "1"
+      - command: auditctl -l | grep actions$ | grep -c "\-w /var/log/secure -p wa"
+        expected: "1"
+
+  rule_4_1_17:
+    description: 4.1.17 - Ensure kernel module loading and unloading is collected
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep modules$ /etc/audit/audit.rules | grep -c "\-w /.*/insmod -p x"
+        expected: "1"
+      - command: grep modules$ /etc/audit/audit.rules | grep -c "\-w /.*/rmmod -p x"
+        expected: "1"
+      - command: grep modules$ /etc/audit/audit.rules | grep -c "\-w /.*/modprobe -p x"
+        expected: "1"
+      - command: grep modules$ /etc/audit/audit.rules | grep "\-a always,exit -F arch=b64" | grep init_module | grep -c delete_module
+        expected: "1"
+
+  rule_4_1_18:
+    description: 4.1.18 - Ensure the audit configuration is immutable
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^\s*[^#]" /etc/audit/rules.d/audit.rules | tail -1 | grep -c '^-e 2'
+        expected: "1"
+
+  rule_4_2_1_1:
+    description: 4.2.1.1 - Ensure rsyslog Service is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled rsyslog 2>/dev/null | grep -c enabled
+        expected: "1"
+
+  rule_4_2_1_2:
+    description: 4.2.1.2 - Ensure logging is configured
+    enabled: false
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: ls -l /var/log/ | wc -l
+        expected: "1"
+
+  rule_4_2_1_3:
+    description: 4.2.1.3 - Ensure rsyslog default file permissions configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^\$FileCreateMode /etc/rsyslog.conf /etc/rsyslog.d/*.conf| grep -c "$FileCreateMode\s*0640"
+        expected: "0"
+        parameter: '-gt'
+
+  rule_4_2_1_4:
+    description: 4.2.1.4 - Ensure rsyslog is configured to send logs to a remote log host
+    enabled: false
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^*.*[^I][^I]*@" /etc/rsyslog.conf /etc/rsyslog.d/*.conf| grep -c "*.* @@loghost.example.com"
+        expected: "0"
+
+  rule_4_2_1_5:
+    description: 4.2.1.5 - Ensure remote rsyslog messages are only accepted on designated log hosts
+    enabled: false
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: grep '$ModLoad imtcp' /etc/rsyslog.conf /etc/rsyslog.d/*.conf | wc -l
+        expected: "0"
+      - command: grep '$InputTCPServerRun\s*514' /etc/rsyslog.conf /etc/rsyslog.d/*.conf | wc -l
+        expected: "0"
+
+  rule_4_2_2_1:
+    description: 4.2.2.1 - Ensure syslog-ng service is enabled
+    enabled: false
+    scored: true
+    severity: low
+    status: ''
+    check:
+      - command: '[ $(rpm -qa|grep -c ^syslog-ng) -gt 0 ] && [ $(systemctl is-enabled syslog-ng 2>/dev/null | grep -c enabled) -gt 0 ] && { echo 1; } || { echo 0; }'
+        expected: "1"
+
+  rule_4_2_2_2:
+    description: 4.2.2.2 - Ensure logging is configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "echo 1"
+        expected: "1"
+
+  rule_4_2_2_3:
+    description: 4.2.2.3 - Ensure syslog-ng default file permissions configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: '[ $(rpm -qa syslog-ng|grep -c ^syslog-ng) -gt 0 ] && { grep ^options /etc/syslog-ng/syslog-ng.conf | grep -c "options { chain_hostnames(off); flush_lines(0); perm(0640); stats_freq(3600); threaded(yes); };"; } || { echo 1; } '
+        expected: "1"
+
+  rule_4_2_2_4:
+    description: 4.2.2.4 - Ensure syslog-ng is configured to send logs to a remote log host
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "grep -c ^options /etc/syslog-ng/syslog-ng.conf"
+        expected: "0"
+
+  rule_4_2_2_5:
+    description: 4.2.2.5 - Ensure remote syslog-ng messages are only accepted on designated log hosts
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "grep -c ^options /etc/syslog-ng/syslog-ng.conf"
+        expected: "0"
+
+  rule_4_2_3:
+    description: 4.2.3 - Ensure rsyslog or syslog-ng is installed
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: if [[ -f /tmp/rpm_packages ]]; then grep -c rsyslog /tmp/rpm_packages; else touch ./skip_rpm; fi
+        expected: "0"
+        parameter: '-gt'
+
+  rule_4_2_4:
+    description: 4.2.4 - Ensure permissions on all logfiles are configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: find /var/log/ -type f -perm /g+w | wc -l
+        expected: "0"
+
+  rule_4_3:
+    description: 4.3 - Ensure logrotate is configured
+    enabled: false
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: "echo 1"
+        expected: "1"
+
+
+  # Access, Authentication and Authorization
+  rule_5_1_1:
+    description: 5.1.1 - Ensure cron daemon is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: systemctl is-enabled crond 2>/dev/null | grep -c enabled
+        expected: "1"
+
+  rule_5_1_2:
+    description: 5.1.2 - Ensure permissions on /etc/crontab are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/crontab | grep -c "Access:\s*(0600/-rw-------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_1_3:
+    description: 5.1.3 - Ensure permissions on /etc/cron.hourly are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/cron.hourly | grep -c "Access:\s*(0700/drwx------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_1_4:
+    description: 5.1.4 - Ensure permissions on /etc/cron.daily are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/cron.daily | grep -c "Access:\s*(0700/drwx------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_1_5:
+    description: 5.1.5 - Ensure permissions on /etc/cron.weekly are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/cron.weekly | grep -c "Access:\s*(0700/drwx------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_1_6:
+    description: 5.1.6 - Ensure permissions on /etc/cron.monthly are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/cron.monthly | grep -c "Access:\s*(0700/drwx------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_1_7:
+    description: 5.1.7 - Ensure permissions on /etc/cron.d are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/cron.d | grep -c "Access:\s*(0700/drwx------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_1_8:
+    description: 5.1.8 - Ensure at/cron is restricted to authorized users
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "[ -f /etc/cron.deny ] || echo 1"
+        expected: "1"
+      - command: "[ -f /etc/at.deny ] || echo 1"
+        expected: "1"
+      - command: stat /etc/cron.allow | grep -c "Access:\s*(0600/-rw-------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+      - command: stat /etc/at.allow | grep -c "Access:\s*(0600/-rw-------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_2_1:
+    description: 5.2.1 - Ensure permissions on /etc/ssh/sshd_config are configured
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: stat /etc/ssh/sshd_config | grep -c "Access:\s*(0600/-rw-------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_5_2_2:
+    description: 5.2.2 - Ensure SSH Protocol is set to 2
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep "^Protocol" /etc/ssh/sshd_config| grep -c "Protocol\s*2$"
+        expected: "1"
+
+  rule_5_2_3:
+    description: 5.2.3 - Ensure SSH LogLevel is set to INFO
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^LogLevel" /etc/ssh/sshd_config | grep -c "LogLevel\s*INFO$"
+        expected: "1"
+
+  rule_5_2_4:
+    description: 5.2.4 - Ensure SSH X11 forwarding is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^X11Forwarding" /etc/ssh/sshd_config | grep -c "X11Forwarding\s*no$"
+        expected: "1"
+
+  rule_5_2_5:
+    description: 5.2.5 - Ensure SSH MaxAuthTries is set to 4 or less
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^MaxAuthTries" /etc/ssh/sshd_config | grep -c "MaxAuthTries\s*4$"
+        expected: "1"
+
+  rule_5_2_6:
+    description: 5.2.6 - Ensure SSH IgnoreRhosts is enabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^IgnoreRhosts" /etc/ssh/sshd_config | grep -c "IgnoreRhosts\s*yes$"
+        expected: "1"
+
+  rule_5_2_7:
+    description: 5.2.7 - Ensure SSH HostbasedAuthentication is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^HostbasedAuthentication" /etc/ssh/sshd_config | grep -c "HostbasedAuthentication\s*no$"
+        expected: "1"
+
+  rule_5_2_8:
+    description: 5.2.8 - Ensure SSH root login is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^PermitRootLogin" /etc/ssh/sshd_config | grep -c "PermitRootLogin\s*no$"
+        expected: "1"
+
+  rule_5_2_9:
+    description: 5.2.9 - Ensure SSH PermitEmptyPasswords is disabled
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: grep "^PermitEmptyPasswords" /etc/ssh/sshd_config | grep -c "PermitEmptyPasswords\s*no$"
+        expected: "1"
+
+  rule_5_2_10:
+    description: 5.2.10 - Ensure SSH PermitUserEnvironment is disabled
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^PermitUserEnvironment /etc/ssh/sshd_config | grep -c "PermitUserEnvironment\s*no$"
+        expected: "1"
+
+  rule_5_2_11:
+    description: 5.2.11 - Ensure only approved ciphers are used
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^MACs /etc/ssh/sshd_config | grep -c "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+        expected: "1"
+
+  # esta creo que deberia estar dentro de la rule_5_2_11
+  rule_5_2_11_extra:
+    description: 5.2.11 - Ensure only approved MAC algorithms are used
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: echo 0
+        expected: "0"
+
+  rule_5_2_12:
+    description: 5.2.12 - Ensure SSH Idle Timeout Interval is configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "[ $(grep '^ClientAliveInterval' /etc/ssh/sshd_config | awk '{print $2}') -eq {{rhel7cis_sshd['clientaliveinterval']}} ] && { echo 1; } || { echo 0; }"
+        expected: "1"
+      - command: grep "^ClientAliveCountMax" /etc/ssh/sshd_config | grep -c "ClientAliveCountMax\s*[0-3]$"
+        expected: "1"
+
+  rule_5_2_13:
+    description: 5.2.13 - Ensure SSH LoginGraceTime is set to one minute or less
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^LoginGraceTime" /etc/ssh/sshd_config | grep -c "LoginGraceTime\s*60$"
+        expected: "1"
+
+  rule_5_2_14:
+    description: 5.2.14 - Ensure SSH access is limited
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+#    check:   # si se define el check rules_cis se queda como empty, no se porque
+#      - command: |
+#          #!/bin/bash
+#
+#          response=0
+#
+#          if [[ ! -z "{{ rhel7cis_sshd.allowusers }}" ]]; then
+#              resp=$(grep "^AllowUsers" /etc/ssh/sshd_config | grep -c "AllowUsers\s*{{ rhel7cis_sshd.allowusers }}$")
+#              response=$(($response + $resp))
+#          else
+#              response=$(($response + 1))
+#          fi
+#
+#          if [[ ! -z "{{ rhel7cis_sshd.allowgroups }}" ]]; then
+#              resp=$(grep "^AllowGroups" /etc/ssh/sshd_config | grep -c "AllowGroups\s*{{ rhel7cis_sshd.allowgroups }}$")
+#              response=$(($response + $resp))
+#          else
+#              response=$(($response + 1))
+#          fi
+#
+#          if [[ ! -z "{{ rhel7cis_sshd.denyusers }}" ]]; then
+#              resp=$(grep "^DenyUsers" /etc/ssh/sshd_config | grep -c "DenyUsers\s*{{ rhel7cis_sshd.denyusers }}$")
+#              response=$(($response + $resp))
+#          else
+#              response=$(($response + 1))
+#          fi
+#
+#          if [[ ! -z "{{ rhel7cis_sshd.denygroups }}" ]]; then
+#              resp=$(grep "^DenyGroups" /etc/ssh/sshd_config | grep -c "DenyGroups\s*{{ rhel7cis_sshd.denygroups }}$")
+#              response=$(($response + $resp))
+#          else
+#              response=$(($response + 1))
+#          fi
+#
+#          echo $response
+#        expected: "4"
+
+  rule_5_2_15:
+    description: 5.2.15 Ensure SSH warning Banner is configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -cE "^Banner\s*/etc/issue.net\s*$" /etc/ssh/sshd_config
+        expected: "1"
+
+  rule_5_3_1:
+    description: 5.3.1 - Ensure password creation requirements are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep pam_pwquality.so /etc/pam.d/password-auth | grep  "password\s*requisite\s*pam_pwquality.so" | grep "try_first_pass" | grep -c "retry=3"
+        expected: "1"
+      - command: grep pam_pwquality.so /etc/pam.d/system-auth | grep  "password\s*requisite\s*pam_pwquality.so" | grep "try_first_pass" | grep -c "retry=3"
+        expected: "1"
+      - command: grep ^minlen /etc/security/pwquality.conf | grep -c "minlen\s*=\s*14$"
+        expected: "1"
+      - command: grep ^dcredit /etc/security/pwquality.conf | grep -c "dcredit\s*=\s*-1$"
+        expected: "1"
+      - command: grep ^lcredit /etc/security/pwquality.conf | grep -c "lcredit\s*=\s*-1$"
+        expected: "1"
+      - command: grep ^ocredit /etc/security/pwquality.conf | grep -c "ocredit\s*=\s*-1$"
+        expected: "1"
+      - command: grep ^ucredit /etc/security/pwquality.conf | grep -c "ucredit\s*=\s*-1$"
+        expected: "1"
+
+  rule_5_3_2:
+    description: 5.3.2 - Ensure lockout for failed password attempts is configured
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^auth\s*required\s*pam_faillock.so" /etc/pam.d/password-auth | grep preauth | egrep -o  "deny=5\s+|deny=5$" 1>/dev/null && grep "^auth\s*required\s*pam_faillock.so" /etc/pam.d/password-auth | grep preauth | egrep -o "unlock_time=120\s+|unlock_time=120$" 1>/dev/null&& echo 1 || echo 0
+        expected: "1"
+
+  rule_5_3_3:
+    description: 5.3.3 - Ensure password reuse is limited
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^password\s*sufficient\s*pam_unix.so" /etc/pam.d/password-auth | egrep -oc "remember=5\s+|remember=5$"
+        expected: "1"
+      - command: grep "^password\s*sufficient\s*pam_unix.so" /etc/pam.d/password-auth | egrep -oc "remember=5\s+|remember=5$"
+        expected: "1"
+
+  rule_5_3_4:
+    description: 5.3.4 - Ensure password hashing algorithm is SHA-512
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -E '^password\s*sufficient\s*pam_unix.so' /etc/pam.d/password-auth | grep -Ec ".*sha512(\s*|$)"
+        expected: "1"
+      - command: grep -E '^password\s*sufficient\s*pam_unix.so' /etc/pam.d/system-auth | grep -Ec ".*sha512(\s*|$)"
+        expected: "1"
+
+  rule_5_4_1_1:
+    description: 5.4.1.1 - Ensure password expiration is 365 days or less
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^PASS_MAX_DAYS /etc/login.defs | awk '{print $NF}'
+        expected: "90"
+        parameter: '-le'
+
+  rule_5_4_1_2:
+    description: 5.4.1.2 - Ensure minimum days between password changes is 7 or more
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^PASS_MIN_DAYS /etc/login.defs | awk '{print $NF}'
+        expected: "7"
+        parameter: '-ge'
+
+  rule_5_4_1_3:
+    description: 5.4.1.3 - Ensure password expiration warning days is 7 or more
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^PASS_WARN_AGE /etc/login.defs | awk '{print $NF}'
+        expected: "7"
+        parameter: '-ge'
+
+  rule_5_4_1_4:
+    description: 5.4.1.4 - Ensure inactive password lock is 30 days or less
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep ^INACTIVE /etc/default/useradd | awk -F '=' '{print $NF}'
+        expected: "30"
+        parameter: '-le'
+
+  rule_5_4_1_5:
+    description: 5.4.1.5 - Ensure all users last password change date is in the past
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          for usr in $(cut -d: -f1 /etc/shadow); do [[ $(chage --list $usr | grep '^Last password change' | cut -d: -f2) > $(date) ]] && echo "$usr :$(chage --list $usr | grep '^Last password change' | cut -d: -f2)"; done| grep -v ec2-user|wc -l
+        expected: "0"
+
+  rule_5_4_2:
+    description: 5.4.2 - Ensure system accounts are non-login
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: 'egrep -v "^\+" /etc/passwd | awk -F ":" ''($1!="root" && $1!="sync" && $1!="shutdown" && $1!="halt" && $3<1000 && $7!="/sbin/nologin" && $7!="/bin/false") {print}''|wc -l'
+        expected: "0"
+
+  rule_5_4_3:
+    description: 5.4.3 - Ensure default group for the root account is GID 0
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: 'grep "^root:" /etc/passwd | cut -f4 -d:'
+        expected: "0"
+
+  rule_5_4_4:
+    description: 5.4.4 - Ensure default user umask is 027 or more restrictive
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -P '^\s*umask\s*(?<!\d)\d{3,4}(?!\d)' /etc/bashrc | grep -oc 0[27]2
+        expected: "0"
+      - command: grep -P '^\s*umask\s*(?<!\d)\d{3,4}(?!\d)' /etc/profile /etc/profile.d/*.sh | grep -oc 0[27]2
+        expected: "0"
+
+  rule_5_4_5:
+    description: 5.4.5 - Ensure default user shell timeout is 900 seconds or less
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep "^TMOUT" /etc/bashrc | egrep -c "TMOUT\s*=\s*{{ rhel7_sshd_config['ClientAliveInterval'] }}$"
+        expected: "1"
+      - command: grep "^TMOUT" /etc/profile | egrep -c "TMOUT\s*=\s*{{ rhel7_sshd_config['ClientAliveInterval'] }}$"
+        expected: "1"
+
+  rule_5_5:
+    description: 5.5 - Ensure root login is restricted to system console
+    enabled: true
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: grep -cv "^#" /etc/securetty
+        expected: "0"
+
+  rule_5_6:
+    description: 5.6 - Ensure access to the su command is restricted
+    enabled: true
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: grep pam_wheel.so /etc/pam.d/su | grep -c "^auth\s*required\s*pam_wheel.so\s*use_uid"
+        expected: "1"
+
+
+  # System Maintenance
+  rule_6_1_1:
+    description: 6.1.1 - Audit system file permissions
+    enabled: false
+    observations: "configuration files are modified during the image build, too many false positive are returned by this check"
+    scored: false
+    not_supported: true
+    severity: medium
+    status: ''
+    check:
+      - command: "echo 1"
+        expected: "1"
+
+  rule_6_1_2:
+    description: 6.1.2 - Ensure permissions on /etc/passwd are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/passwd | grep -c "Access:\s*(06[0-4][0-4]/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_3:
+    description: 6.1.3 - Ensure permissions on /etc/shadow are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/shadow | grep -c "Access:\s*(0000/----------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_4:
+    description: 6.1.4 - Ensure permissions on /etc/group are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/group | grep -c "Access:\s*(06[0-4][0-4]/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_5:
+    description: 6.1.5 - Ensure permissions on /etc/gshadow are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/gshadow | grep -c "Access:\s*(0000/----------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_6:
+    description: 6.1.6 - Ensure permissions on /etc/passwd- are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/passwd- | grep -c "Access:\s*(06[0-4][0-4]/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_7:
+    description: 6.1.7 - Ensure permissions on /etc/shadow- are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/shadow- | grep -c "Access:\s*(0000/----------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_8:
+    description: 6.1.8 - Ensure permissions on /etc/group- are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/group- | grep -c "Access:\s*(06[0-4][0-4]/-rw-[-r]--[-r]--)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_9:
+    description: 6.1.9 - Ensure permissions on /etc/gshadow- are configured
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: stat /etc/gshadow- | grep -c "Access:\s*(0000/----------)\s*Uid:.*root.*Gid:.*root)$"
+        expected: "1"
+
+  rule_6_1_10:
+    description: 6.1.10 - Ensure no world writable files exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -type f -perm -0002 | wc -l"
+        expected: "0"
+
+  rule_6_1_11:
+    description: 6.1.11 - Ensure no unowned files or directories exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser|wc -l"
+        expected: "0"
+
+  rule_6_1_12:
+    description: 6.1.12 - Ensure no ungrouped files or directories exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: "df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nogroup|wc -l"
+        expected: "0"
+
+  rule_6_1_13:
+    description: 6.1.13 - Audit SUID executables
+    enabled: false
+    observations: "no defined list of SUID executables"
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: "echo 1"
+        expected: "1"
+
+  rule_6_1_14:
+    description: 6.1.14 - Audit SGID executables
+    enabled: false
+    observations: "no defined list of SGID executables"
+    not_supported: true
+    scored: false
+    severity: medium
+    status: ''
+    check:
+      - command: echo 1
+        expected: "1"
+
+  rule_6_2_1:
+    description: 6.2.1 - Ensure password fields are not empty
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: cat /etc/shadow | awk -F ':' '($2 == "" && $1!="root") { print $1 " does not have a password "}' | wc -l
+        expected: "0"
+
+  rule_6_2_2:
+    description: 6.2.2 - Ensure no legacy '+' entries exist in /etc/passwd
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c '^\+:' /etc/passwd
+        expected: "0"
+
+  rule_6_2_3:
+    description: 6.2.3 - Ensure no legacy '+' entries exist in /etc/shadow
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c '^\+:' /etc/shadow
+        expected: "0"
+
+  rule_6_2_4:
+    description: 6.2.4 - Ensure no legacy '+' entries exist in /etc/group
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: grep -c '^\+:' /etc/group
+        expected: "0"
+
+  rule_6_2_5:
+    description: 6.2.5 - Ensure root is the only UID 0 account
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: cat /etc/passwd | awk -F ':' '($3 == 0) { print $1 }' | grep -c 'root'
+        expected: "1"
+
+  rule_6_2_6:
+    description: 6.2.6 - Ensure root PATH Integrity
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          if [ "`echo $PATH | grep ::`" != "" ]; then
+              echo "Empty Directory in PATH (::)"
+          fi
+
+          if [ "`echo $PATH | grep :$`"  != "" ]; then
+            echo "Trailing : in PATH"
+          fi
+
+          p=`echo $PATH | sed -e 's/::/:/' -e 's/:$//' -e 's/:/ /g'`
+          set -- $p
+          while [ "$1" != "" ]; do
+            if [ "$1" = "." ]; then
+              echo "PATH contains ."
+              shift
+              continue
+            fi
+            if [ -d $1 ]; then
+              dirperm=`ls -ldH $1 | cut -f1 -d" "`
+              if [ `echo $dirperm | cut -c6`  != "-" ]; then
+                echo "Group Write permission set on directory $1"
+              fi
+              if [ `echo $dirperm | cut -c9` != "-" ]; then
+                echo "Other Write permission set on directory $1"
+              fi
+              dirown=`ls -ldH $1 | awk '{print $3}'`
+              if [ "$dirown" != "root" ] ; then
+                echo $1 is not owned by root
+                  fi
+                else
+                    echo $1 is not a directory
+                  fi
+              shift
+          done | wc -l
+
+        expected: "0"
+
+  rule_6_2_7:
+    description: 6.2.7 - Ensure all users' home directories exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+              echo "The home directory ($dir) of user $user does not exist."
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_8:
+    description: 6.2.8 - Ensure users' home directories permissions are 750 or more restrictive
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+
+            if [ ! -d "$dir" ]; then
+              echo "The home directory ($dir) of user $user does not exist."
+            else
+              dirperm=`ls -ld $dir | cut -f1 -d" "`
+              if [ `echo $dirperm | cut -c6` != "-" ]; then
+                  echo "Group Write permission set on the home directory ($dir) of user $user"
+              fi
+              if [ `echo $dirperm | cut -c8` != "-" ]; then
+                  echo "Other Read permission set on the home directory ($dir) of user $user"
+              fi
+              if [ `echo $dirperm | cut -c9` != "-" ]; then
+                echo "Other Write permission set on the home directory ($dir) of user $user"
+              fi
+              if [ `echo $dirperm | cut -c10` != "-" ]; then
+                echo "Other Execute permission set on the home directory ($dir) of user $user"
+              fi
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_9:
+    description: 6.2.9 - Ensure users own their home directories
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+              else
+               owner=$(stat -L -c "%U" "$dir")
+               if [ "$owner" != "$user" ]; then
+                echo "The home directory ($dir) of user $user is owned by $owner."
+               fi
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_10:
+    description: 6.2.10 - Ensure users dot files are not group or world writable
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+            echo "The home directory ($dir) of user $user does not exist."
+            else
+                for file in $dir/.[A-Za-z0-9]*; do
+                if [ ! -h "$file" -a -f "$file" ]; then
+                  fileperm=`ls -ld $file | cut -f1 -d" "`
+                  if [ `echo $fileperm | cut -c6` != "-" ]; then
+                    echo "Group Write permission set on file $file"
+                  fi
+                  if [ `echo $fileperm | cut -c9`  != "-" ]; then
+                    echo "Other Write permission set on file $file"
+                  fi
+                fi
+                done
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_11:
+    description: 6.2.11 - Ensure no users have .forward files
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+              echo "The home directory ($dir) of user $user does not exist."
+            else
+              if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+                echo ".forward file $dir/.forward exists"
+              fi
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_12:
+    description: 6.2.12 - Ensure no users have .netrc files
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+              echo "The home directory ($dir) of user $user does not exist."
+            else
+              if [ ! -h "$dir/.netrc" -a -f "$dir/.netrc" ]; then
+                    echo ".netrc file $dir/.netrc exists"
+              fi
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_13:
+    description: 6.2.13 - Ensure users .netrc Files are not group or world accessible
+    enabled: true
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+            echo "The home directory ($dir) of user $user does not exist."
+            else
+                for file in $dir/.netrc; do
+                  if [ ! -h "$file" -a -f "$file" ]; then
+                    fileperm=`ls -ld $file | cut -f1 -d" "`
+                    if [ `echo $fileperm | cut -c5`  != "-" ]; then
+                      echo "Group Read set on $file"
+                    fi
+                    if [ `echo $fileperm | cut -c6`  != "-" ]; then
+                      echo "Group Write set on $file"
+                    fi
+                    if [ `echo $fileperm | cut -c7`  != "-" ]; then
+                      echo "Group Execute set on $file"
+                    fi
+                    if [ `echo $fileperm | cut -c8`  != "-" ]; then
+                      echo "Other Read set on $file"
+                    fi
+                    if [ `echo $fileperm | cut -c9`  != "-" ]; then
+                      echo "Other Write set on $file"
+                    fi
+                    if [ `echo $fileperm | cut -c10`  != "-" ]; then
+                      echo "Other Execute set on $file"
+                    fi
+                  fi
+                done
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_14:
+    description: 6.2.14 - Ensure no users have .rhosts files
+    enabled: true
+    scored: true
+    severity: critical
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | egrep -v '^(root|halt|sync|shutdown)' | awk -F: '($7 != "/sbin/nologin" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+              echo "The home directory ($dir) of user $user does not exist."
+            else
+              for file in $dir/.rhosts; do
+                    if [ ! -h "$file" -a -f "$file" ]; then
+                      echo ".rhosts file in $dir"
+                    fi
+              done
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_15:
+    description: 6.2.15 - Ensure all groups in /etc/passwd exist in /etc/group
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          for i in $(cut -s -d: -f4 /etc/passwd | sort -u ); do
+            grep -q -P "^.*?:[^:]*:$i:" /etc/group
+            if [ $? -ne 0 ]; then
+              echo "Group $i is referenced by /etc/passwd but does not exist in /etc/group"
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_16:
+    description: 6.2.16 - Ensure no duplicate UIDs exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+            [ -z "${x}" ] && break
+            set - $x
+            if [ $1 -gt 1 ]; then
+              users=`awk -F: '($3 == n) { print $1 }' n=$2 /etc/passwd | xargs`
+              echo "Duplicate UID ($2): ${users}"
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_17:
+    description: 6.2.17 - Ensure no duplicate GIDs exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/group | cut -f3 -d":" | sort -n | uniq -c | while read x ; do
+            [ -z "${x}" ] && break
+            set - $x
+            if [ $1 -gt 1 ]; then
+              groups=`awk -F: '($3 == n) { print $1 }' n=$2 /etc/group | xargs`
+              echo "Duplicate GID ($2): ${groups}"
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_18:
+    description: 6.2.18 - Ensure no duplicate user names exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/passwd | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
+            [ -z "${x}" ] && break
+            set - $x
+            if [ $1 -gt 1 ]; then
+              uids=`awk -F: '($1 == n) { print $3 }' n=$2 /etc/passwd | xargs`
+              echo "Duplicate User Name ($2): ${uids}"
+            fi
+          done | wc -l
+        expected: "0"
+
+  rule_6_2_19:
+    description: 6.2.19 - Ensure no duplicate group names exist
+    enabled: false
+    scored: true
+    severity: medium
+    status: ''
+    check:
+      - command: |
+          #!/bin/bash
+          cat /etc/group | cut -f1 -d":" | sort -n | uniq -c | while read x ; do
+            [ -z "${x}" ] && break
+            set - $x
+            if [ $1 -gt 1 ]; then
+              gids=`gawk -F: '($1 == n) { print $3 }' n=$2 /etc/group | xargs`
+              echo "Duplicate Group Name ($2): ${gids}"
+            fi
+          done | wc -l
+        expected: "0"
